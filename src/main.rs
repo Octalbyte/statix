@@ -9,13 +9,12 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[clap("CLI simple static file server", "0.1.0", "@J-P-S-O")]
 struct Args {
-    /// Name of the person to greet
-    #[clap(short, long)]
-    name: String,
 
-    /// Number of times to greet
+    #[clap(short, long)]
+    host: String,
+
     #[clap(short, long, default_value_t = 1)]
-    count: u8,
+    port: u32,
 }
 
 
