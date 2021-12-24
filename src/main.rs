@@ -34,8 +34,8 @@ fn main() {
         ap.parse_args_or_exit();
     }
     
-    let mut server = Server::http();
+    // let mut server = Server::http();
 
-    println!("Hello, world!");
+    println!("{}:{}", host, port);
 
 }
