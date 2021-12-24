@@ -64,6 +64,7 @@ for _ in (0 .. 5) { //change this so user can choose threads
             let rq = server.recv().unwrap();
 
             // ...
+            // must be fixed
         }
     });
 
