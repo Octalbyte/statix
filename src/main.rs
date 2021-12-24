@@ -7,6 +7,7 @@ use tiny_http::{
     SslConfig
 };
 
+use std::sync::Arc;
 mod lib; //must be fixed
 
 const about: &str = "CLI simple static file server";
@@ -14,6 +15,8 @@ const version: &str = "0.1.0";
 const author: &str = "@J-P-S-O";
 
 use clap::Parser;
+
+use std::thread;
 
 #[derive(Parser, Debug)]
 #[clap(about,version , author)]
@@ -52,9 +55,10 @@ fn main() {
 
     let mut server = Server::new(ServerConfig {
         addr: to_bind, 
-        ssl: crt
+        ssl: crt 
     }).unwrap();
-
+    let server = Arc::new(server);
+    let mut guards = Vec::with_capacity(4);
     
 for _ in (0 .. 5) { //change this so user can choose threads
     let server = server.clone();
