@@ -75,3 +75,12 @@ for _ in (0 .. 5) { //change this so user can choose threads
     guards.push(guard);
 }
 }
+
+for guard in guards {
+
+    
+
+}
+
+
+
