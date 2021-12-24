@@ -78,7 +78,7 @@ for _ in (0 .. 5) { //change this so user can choose threads
 
 for guard in guards {
 
-    
+    guard.join().unwrap()
 
 }
 
