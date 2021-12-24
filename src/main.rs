@@ -7,6 +7,7 @@ use tiny_http::{
     SslConfig
 };
 
+use std::io::BufReader;
 use std::sync::Arc;
 mod lib; //must be fixed
 
@@ -66,6 +67,18 @@ for _ in (0 .. 5) { //change this so user can choose threads
     let guard = thread::spawn(move || {
         loop {
             let rq = server.recv().unwrap();
+            let path = rq.url();
+            if String::from(path).contains("../"){
+                continue; //bad request
+                /* 
+
+                Appropritate would be: handleBadRequest()
+                Blacklist(rq)
+
+                */
+            }
+            let file = File::open(path);
+            let mut buf_reader = BufReader::new(file);
 
             // ...
             // must be fixed
