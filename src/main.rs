@@ -1,7 +1,9 @@
 extern crate tiny_http;
 use tiny_http::{
     Server,
-    Response
+    Response,
+    ServerConfig,
+    SslConfig
 };
 
 const about: &str = "CLI simple static file server";
@@ -19,17 +21,27 @@ struct Args {
 
     #[clap(short, long, default_value = "8080")]
     port: u32,
+
+    #[clap(short, long, default_value = "None")]
+
+    crt: String
 }
 
 
 
 fn main() {
-    let mut host = "127.0.0.1";
-    let mut port = 8080;
-   
-    // let mut server = Server::http();
+
     let args = Args::parse();
 
     println!("{}:{}", args.host, args.port);
+    
+    let to_bind = format!("{}:{}", args.host, args.port);
+
+    let mut crt: Option<SslConfig> = None;
+
+    let mut server = Server::new(ServerConfig {
+        addr: to_bind, 
+        ssl: crt
+    });
 
 }
