@@ -6,7 +6,8 @@ use tiny_http::{
     ServerConfig,
     SslConfig
 };
-//use lib::Crt; //must be fixed
+
+use crate::Crt; //must be fixed
 
 const about: &str = "CLI simple static file server";
 const version: &str = "0.1.0";
