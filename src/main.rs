@@ -13,24 +13,24 @@ use argparse::{
 
 
 fn main() {
-    let mut host = "127.0.0.1"
-    let mut port = 8080
+    let mut host = "127.0.0.1";
+    let mut port = 8080;
     {  // this block limits scope of borrows by ap.refer() method
         let mut ap = ArgumentParser::new();
         ap.set_description("Host a static file webserver");
         
-        ap.refer(&mut name)
+        ap.refer(&mut host)
             .add_option(
                 &["--host"], 
-                Store,
+                StoreTrue,
                 "Host to bind"
         );
         ap.refer(&mut port)
             .add_option(
                 &["--port"],
-                Store,
+                StoreTrue,
                 "Port to listen"
-        )
+        );
         ap.parse_args_or_exit();
     }
     
