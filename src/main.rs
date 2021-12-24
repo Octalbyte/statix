@@ -3,12 +3,18 @@ use tiny_http::{
     Server,
     Response
 }
+extern crate argparse;
 
+use argparse::{
+    ArgumentParser, 
+    StoreTrue, 
+    Store
+};
 
 
 fn main() {
     
-    let mut server = tiny_http
+    let mut server = Server::http()
 
     println!("Hello, world!");
 
