@@ -14,10 +14,10 @@ use clap::Parser;
 #[clap(about,version , author)]
 struct Args {
 
-    #[clap(short, long, default_value_t = "127.0.0.1")]
+    #[clap(short, long, default_value = "127.0.0.1")]
     host: String,
 
-    #[clap(short, long, default_value_t = 8080)]
+    #[clap(short, long, default_value = "8080")]
     port: u32,
 }
 
