@@ -55,4 +55,5 @@ fn main() {
         ssl: crt
     });
 
+    server
 }
