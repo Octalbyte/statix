@@ -57,8 +57,8 @@ fn main() {
         addr: to_bind, 
         ssl: crt 
     }).unwrap();
-    let server = Arc::new(server);
-    let mut guards = Vec::with_capacity(4);
+let server = Arc::new(server);
+let mut guards = Vec::with_capacity(5);
     
 for _ in (0 .. 5) { //change this so user can choose threads
     let server = server.clone();
