@@ -4,7 +4,7 @@ mod Crt{
         /*error supressor */
         return vec![1,2,3]
     }
-    pub fn private(filename: String) -> Vec<u>{
+    pub fn private(filename: String) -> Vec<u8>{
         /* error suppressor */
         return vec![1,2,3]
     }
