@@ -7,7 +7,7 @@ use tiny_http::{
     SslConfig
 };
 
-use crate::Crt; //must be fixed
+mod lib; //must be fixed
 
 const about: &str = "CLI simple static file server";
 const version: &str = "0.1.0";
@@ -44,8 +44,8 @@ fn main() {
 /*
     if (args.crt != "None"){
         crt = Some(SslConfig{
-            certificate: Crt::public(args.crt),
-            private_key: Crt::private(args.crt)
+            certificate: lib::Crt::public(args.crt),
+            private_key: lib::Crt::private(args.crt)
         })
     }
 */
@@ -53,7 +53,20 @@ fn main() {
     let mut server = Server::new(ServerConfig {
         addr: to_bind, 
         ssl: crt
+    }).unwrap();
+
+    
+for _ in (0 .. 5) { //change this so user can choose threads
+    let server = server.clone();
+
+    let guard = thread::spawn(move || {
+        loop {
+            let rq = server.recv().unwrap();
+
+            // ...
+        }
     });
 
-    server
+    guards.push(guard);
+}
 }
