@@ -70,18 +70,18 @@ for _ in (0 .. 5) { //change this so user can choose threads
             let path = rq.url();
             if String::from(path).contains("../"){
                 continue; //bad request
-                /* 
-
-                Appropritate would be: handleBadRequest()
-                Blacklist(rq)
-
-                */
             }
-            let file = File::open(path).unwrap();
-            let mut buf_reader = BufReader::new(file);
+            //let file = File::open(path).unwrap();
+            //let mut buf_reader = BufReader::new(file);
 
             // ...
             // must be fixed
+
+            rq.respond(Response::from_file(File::open(path).unwrap()));
+
+            
+
+            
         }
     });
 
