@@ -77,7 +77,7 @@ for _ in (0 .. 5) { //change this so user can choose threads
 
                 */
             }
-            let file = File::open(path);
+            let file = File::open(path).unwrap();
             let mut buf_reader = BufReader::new(file);
 
             // ...
