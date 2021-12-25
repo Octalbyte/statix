@@ -78,7 +78,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 println!("Safe request: {}", path);
             }
             
-            Rc::into_raw(rq).respond(Response::from_file(File::open(path).unwrap()));
+            rq.respond(Response::from_file(File::open(path).unwrap()));
 
             
 
