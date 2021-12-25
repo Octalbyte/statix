@@ -7,7 +7,7 @@ use tiny_http::{
     SslConfig
 };
 
-use std::io::BufReader;
+//use std::io::BufReader;
 use std::sync::Arc;
 mod lib; //must be fixed
 
@@ -54,20 +54,20 @@ fn main() {
     }
 */
 
-    let mut server = Server::new(ServerConfig {
+let server = Server::new(ServerConfig {
         addr: to_bind, 
         ssl: crt 
     }).unwrap();
 let server = Arc::new(server);
 let mut guards = Vec::with_capacity(5);
     
-for _ in (0 .. 5) { //change this so user can choose threads
+for _ in 0 .. 5 { //change this so user can choose threads
     let server = server.clone();
 
     let guard = thread::spawn(move || {
         loop {
             let rq = server.recv().unwrap();
-            let path = rq.url();
+            let path = Arc::new(rq.url());
             if String::from(path).contains("../"){
                 continue; //bad request
             }
@@ -77,7 +77,7 @@ for _ in (0 .. 5) { //change this so user can choose threads
             // ...
             // must be fixed
 
-            rq.respond(Response::from_file(File::open(path).unwrap()));
+            rq.respond(Response::from_file(File::open(&*path).unwrap()));
 
             
 
