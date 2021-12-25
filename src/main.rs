@@ -71,14 +71,17 @@ for _ in 0 .. 5 { //change this so user can choose threads
             let rq = Rc::new(server.recv().unwrap());
             
             let clone = Rc::clone(&rq);
-            let path = clone.url();
+            let path = Rc::try_unwrap(clone);
+            let path = path.unwrap();
+            let path = path.url();
+
             if String::from(path).contains("../"){
                 continue; //bad request
             } else {
                 println!("Safe request: {}", path);
             }
             
-            rq.respond(Response::from_file(File::open(path).unwrap()));
+            Rc::try_unwrap(rq).unwrap().respond(Response::from_file(File::open(path).unwrap()));
 
             
 
@@ -91,11 +94,21 @@ for _ in 0 .. 5 { //change this so user can choose threads
 
 for guard in guards {
 
-    guard.join().unwrap()
+    let rs = guard.join();
 
+    match rs {
+        Err(e) => {
+            println!("{:#?}", e);
+        },
+        _ => {
+            ();
+        }
+            
+    }
+}
 }
 
-}
+
 
 
 
