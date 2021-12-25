@@ -8,25 +8,8 @@ use tiny_http::{
     Request
 };
 
-/*
-fn clone(some: &Request) -> Request {
-    *some
-}
+use std::rc::Rc;
 
-*/
-
-/*
-impl Copy for Request {}
-
-impl Clone for Request {
-    fn clone(&self) -> Point {
-        *self
-    }
-}
-
- */
-
-//use std::io::BufReader;
 use std::sync::Arc;
 mod lib; //must be fixed
 
@@ -87,7 +70,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
         loop {
             let rq = server.recv().unwrap();
             
-            let path = rq.url();
+            let path = Rc::clone(rq).url();
             
             if String::from(path).contains("../"){
                 continue; //bad request
