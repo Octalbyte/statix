@@ -4,8 +4,27 @@ use tiny_http::{
     Server,
     Response,
     ServerConfig,
-    SslConfig
+    SslConfig,
+    Request
 };
+
+/*
+fn clone(some: &Request) -> Request {
+    *some
+}
+
+*/
+
+/*
+impl Copy for Request {}
+
+impl Clone for Request {
+    fn clone(&self) -> Point {
+        *self
+    }
+}
+
+ */
 
 //use std::io::BufReader;
 use std::sync::Arc;
@@ -67,17 +86,14 @@ for _ in 0 .. 5 { //change this so user can choose threads
     let guard = thread::spawn(move || {
         loop {
             let rq = server.recv().unwrap();
-            let path = Arc::new(rq.url());
+            
+            let path = rq.url();
+            
             if String::from(path).contains("../"){
                 continue; //bad request
             }
-            //let file = File::open(path).unwrap();
-            //let mut buf_reader = BufReader::new(file);
-
-            // ...
-            // must be fixed
-
-            rq.respond(Response::from_file(File::open(&*path).unwrap()));
+            
+            rq.respond(Response::from_file(File::open(path).unwrap()));
 
             
 
