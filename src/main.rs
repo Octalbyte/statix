@@ -81,7 +81,11 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 println!("Safe request: {}", path);
             }
             
-            Rc::try_unwrap(rq).unwrap().respond(Response::from_file(File::open(path).unwrap()));
+            let i = Rc::try_unwrap(rq)
+            .unwrap()
+            .respond(Response::from_file(
+                File::open(path).unwrap()
+            ));
 
             
 
