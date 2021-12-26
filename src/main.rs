@@ -74,10 +74,12 @@ for _ in 0 .. 5 { //change this so user can choose threads
             let clone = Rc::clone(&rq);
             let path = Rc::try_unwrap(clone);
             match path {
-                Result(Err) => {
-                    println!("{:#?", path);
+               std::result::Result::Err(_) => {
+                    println!("{:#?}", path);
+                    let i = path.unwrap();
+                    println!("{:#?}", i);
                 },
-                    _ => {()}
+                    _ => {panic!("{:#?}",path)}
                 
             }
             let path = path.unwrap();
