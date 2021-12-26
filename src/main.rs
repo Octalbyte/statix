@@ -73,6 +73,13 @@ for _ in 0 .. 5 { //change this so user can choose threads
             
             let clone = Rc::clone(&rq);
             let path = Rc::try_unwrap(clone);
+            match path {
+                Result(Err) => {
+                    println!("{:#?", path);
+                },
+                    _ => {()}
+                
+            }
             let path = path.unwrap();
             let path = path.url();
 
