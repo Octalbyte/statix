@@ -1,11 +1,12 @@
+
+
 extern crate tiny_http;
 use std::fs::File;
 use tiny_http::{
     Server,
     Response,
     ServerConfig,
-    SslConfig,
-    Request
+    SslConfig
 };
 
 use std::rc::Rc;
@@ -81,7 +82,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 println!("Safe request: {}", path);
             }
             
-            let i = Rc::try_unwrap(rq)
+            let _i = Rc::try_unwrap(rq)
             .unwrap()
             .respond(Response::from_file(
                 File::open(path).unwrap()
