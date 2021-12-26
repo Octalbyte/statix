@@ -76,10 +76,11 @@ for _ in 0 .. 5 { //change this so user can choose threads
             match path {
                std::result::Result::Err(_) => {
                     println!("{:#?}", path);
-                    let i = path.unwrap();
-                    println!("{:#?}", i);
+                    
                 },
-                    _ => {panic!("{:#?}",path)}
+                    _ => {
+                        
+                    }
                 
             }
             let path = path.unwrap();
