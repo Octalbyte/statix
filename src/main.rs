@@ -6,7 +6,8 @@ use tiny_http::{
     Server,
     Response,
     ServerConfig,
-    SslConfig
+    SslConfig,
+    Request
 };
 
 use std::rc::Rc;
@@ -44,7 +45,7 @@ fn main() {
     let args = Args::parse();
 
     println!("{}:{}", args.host, args.port);
-    
+
     let to_bind = format!("{}:{}", args.host, args.port);
 
     let mut crt: Option<SslConfig> = None;
@@ -58,27 +59,30 @@ fn main() {
 */
 
 let server = Server::new(ServerConfig {
-        addr: to_bind, 
-        ssl: crt 
+        addr: to_bind,
+        ssl: crt
     }).unwrap();
 let server = Arc::new(server);
 let mut guards = Vec::with_capacity(5);
-    
+
 for _ in 0 .. 5 { //change this so user can choose threads
     let server = server.clone();
 
     let guard = thread::spawn(move || {
         loop {
             let rq = Rc::new(server.recv().unwrap());
-            
+
             let clone = Rc::clone(&rq);
             let path = Rc::try_unwrap(clone);
-            
+            let npath: Vec<Request> = vec![];
+
             match path {
-                Err(why) => panic!("{:?}", why),
-                _ => () 
+                Err(why) => {
+                    npath.push(why);
+                },
+                _ => ()
             }
-//            let path = path.unwrap();
+            let path = npath[0];
             let path = path.url();
 
             if String::from(path).contains("../"){
@@ -86,16 +90,16 @@ for _ in 0 .. 5 { //change this so user can choose threads
             } else {
                 println!("Safe request: {}", path);
             }
-            
+
             let _i = Rc::try_unwrap(rq)
             .unwrap()
             .respond(Response::from_file(
                 File::open(path).unwrap()
             ));
 
-            
 
-            
+
+
         }
     });
 
@@ -113,7 +117,7 @@ for guard in guards {
         _ => {
             ();
         }
-            
+
     }
 }
 }
