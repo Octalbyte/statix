@@ -90,6 +90,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     ();
                 }
             }
+            
            let rs = rs.unwrap();
            rq.respond(Response::from_file(rs));
 
