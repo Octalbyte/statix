@@ -70,11 +70,10 @@ for _ in 0 .. 5 { //change this so user can choose threads
 
     let guard = thread::spawn(move || {
         loop {
-            let rq = Rc::new(server.recv().unwrap());
+            let rq = server.recv().unwrap();
 
-            let clone = rq.clone();
-            println!("{:?}", clone);
-            let path = clone.url();
+            println!("{:?}", &rq);
+            let path = rq.url();
 
             if String::from(path).contains("../"){
                 continue; //bad request
@@ -82,7 +81,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 println!("Safe request: {}", path);
             }
 
-            let _i = &rq.respond(Response::from_file(
+           /* let _i = */rq.respond(Response::from_file(
                 File::open(path).unwrap()
             ));
 
