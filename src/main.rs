@@ -72,19 +72,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
         loop {
             let rq = Rc::new(server.recv().unwrap());
 
-            let clone = Rc::clone(&rq);
-            let path = Rc::try_unwrap(clone);
-            let path = Rc::try_unwrap(path);
-            let npath: Vec<Request> = vec![];
-
-            match path {
-                Err(why) => {
-                    npath.push(why);
-                },
-                _ => ()
-            }
-            let path = npath[0];
-            let path = path.url();
+            let clone = rq.clone();
+            println!("{:?}", clone);
+            let path = clone.url();
 
             if String::from(path).contains("../"){
                 continue; //bad request
@@ -97,9 +87,6 @@ for _ in 0 .. 5 { //change this so user can choose threads
             .respond(Response::from_file(
                 File::open(path).unwrap()
             ));
-
-
-
 
         }
     });
