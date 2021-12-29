@@ -1,5 +1,5 @@
 
-
+use std::path::Path;
 extern crate tiny_http;
 use std::fs::File;
 use tiny_http::{
@@ -80,7 +80,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
             } else {
                 println!("Safe request: {}", path);
             }
-            let rs = File::open(path).unwrap();
+            let rs = File::open(Path::new(&("./".to_owned()+&path))).unwrap();
            rq.respond(Response::from_file(rs));
 
         }
