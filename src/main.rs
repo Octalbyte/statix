@@ -78,9 +78,20 @@ for _ in 0 .. 5 { //change this so user can choose threads
             if path.contains("../"){
                 continue; //bad request
             } else {
-                println!("Safe request: {}", path);
+                //println!("Safe request: {}", path);
             }
-            let rs = File::open(Path::new(&("./".to_owned()+&path))).unwrap();
+            let rs = File::open(Path::new(&("./".to_owned()+&path)));
+            match rs {
+                Err(reason) => {
+                    rq.respond(Response::from_string(format!("{:#?}", reason)));
+                    break;
+                },
+                _ => {
+                    ();
+                }
+            }
+            
+           let rs = rs.unwrap();
            rq.respond(Response::from_file(rs));
 
         }
