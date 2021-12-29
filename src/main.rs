@@ -82,8 +82,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 println!("Safe request: {}", path);
             }
 
-            let _i = Rc::try_unwrap(rq)
-            .unwrap()
+            let _i = rq.clone()
             .respond(Response::from_file(
                 File::open(path).unwrap()
             ));
