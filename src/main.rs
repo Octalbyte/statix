@@ -73,17 +73,15 @@ for _ in 0 .. 5 { //change this so user can choose threads
             let rq = server.recv().unwrap();
 
             println!("{:?}", &rq);
-            let path = rq.url();
+            let path = String::from(rq.url());
 
-            if String::from(path).contains("../"){
+            if path.contains("../"){
                 continue; //bad request
             } else {
                 println!("Safe request: {}", path);
             }
-
-           /* let _i = */rq.respond(Response::from_file(
-                File::open(path).unwrap()
-            ));
+            let rs = File::open(path).unwrap();
+           rq.respond(Response::from_file(rs));
 
         }
     });
