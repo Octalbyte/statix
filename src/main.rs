@@ -74,6 +74,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
 
             let clone = Rc::clone(&rq);
             let path = Rc::try_unwrap(clone);
+            let path = Rc::try_unwrap(path);
             let npath: Vec<Request> = vec![];
 
             match path {
