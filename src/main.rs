@@ -69,7 +69,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
     let server = server.clone();
 
     let guard = thread::spawn(move || {
-        loop {
+        loop outer {
             let rq = server.recv().unwrap();
 
             println!("{:?}", &rq);
@@ -80,17 +80,44 @@ for _ in 0 .. 5 { //change this so user can choose threads
             } else {
                 //println!("Safe request: {}", path);
             }
+            let b: bool = Path::new(&("./".to_owned()+ &path)).is_dir();
+            if b {
+                let entries = fs::read_dir(path);
+                match entries {
+                    Err(why) => {
+                        rq.respond(Response::from_string(format!("{:#?}", reason)));
+                        continue;
+                    },
+                    Ok(_value) => {()}
+                }
+                let mut TheResponse: String = String::from(format!("Scanning directory {}\n\n", &path));
+
+                for entry in entries {
+                    let mut shouldbreak = false;
+                    let entry = entry.unwrap_or_else(|e| {
+                        rq.respond(Response::from_string(format!("{:#?}", e)));
+                        shouldbreak = true;
+                    });
+                    if shouldbreak {
+                        continue outer;
+                    }
+                    let path = entry.path();
+                    TheResponse = TheResponse+path+"\n";
+                }
+                rq.respond(Response::from_string(TheResponse));
+                    continue;
+            }
             let rs = File::open(Path::new(&("./".to_owned()+&path)));
             match rs {
                 Err(reason) => {
                     rq.respond(Response::from_string(format!("{:#?}", reason)));
-                    break;
+                    continue;
                 },
                 _ => {
                     ();
                 }
             }
-            
+
            let rs = rs.unwrap();
            rq.respond(Response::from_file(rs));
 
