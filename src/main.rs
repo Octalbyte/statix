@@ -83,24 +83,31 @@ for _ in 0 .. 5 { //change this so user can choose threads
             }
             let b: bool = Path::new(&("./".to_owned()+ &path)).is_dir();
             if b {
-                let entries = fs::read_dir(path);
-                match entries {
+                let entries = fs::read_dir(Path::new(&("./".to_owned()+ &path)));
+                let entries = match entries {
                     Err(why) => {
-                        rq.respond(Response::from_string(format!("{:#?}", why)));
-                        continue;
+                        fs::read_dir("./").unwrap()
                     },
-                    Ok(_value) => {()}
-                }
+                    Ok(value) => {
+                        value
+                    }
+
+                };
                 let mut TheResponse: String = String::from(format!("Scanning directory {}\n\n", &path));
 
+
                 for entry in entries {
-                    let mut shouldbreak = false;
-                    let entry = entry;//.unwrap()
-                    /*if shouldbreak {
-                        continue 'outer;
-                    }*/
-                    let path = entry.path();
-                    TheResponse = TheResponse+path+"\n";
+                    let path = entry.unwrap().path();
+                    let n = path.as_path().to_str();
+                    let n = match n{
+                    None =>  {
+                        "404"
+                    },
+                    Some(value) => {
+                        value
+                    }
+                };
+                    TheResponse = TheResponse+n+"\n";
                 }
                 rq.respond(Response::from_string(TheResponse));
                     continue;
