@@ -2,6 +2,7 @@
 use std::path::Path;
 extern crate tiny_http;
 use std::fs::File;
+use std::fs;
 use tiny_http::{
     Server,
     Response,
@@ -69,7 +70,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
     let server = server.clone();
 
     let guard = thread::spawn(move || {
-        loop {
+       'outer: while true {
             let rq = server.recv().unwrap();
 
             println!("{:?}", &rq);
@@ -80,17 +81,48 @@ for _ in 0 .. 5 { //change this so user can choose threads
             } else {
                 //println!("Safe request: {}", path);
             }
+            let b: bool = Path::new(&("./".to_owned()+ &path)).is_dir();
+            if b {
+                let entries = fs::read_dir(Path::new(&("./".to_owned()+ &path)));
+                let entries = match entries {
+                    Err(why) => {
+                        fs::read_dir("./").unwrap()
+                    },
+                    Ok(value) => {
+                        value
+                    }
+
+                };
+                let mut TheResponse: String = String::from(format!("Scanning directory {}\n\n", &path));
+
+
+                for entry in entries {
+                    let path = entry.unwrap().path();
+                    let n = path.as_path().to_str();
+                    let n = match n{
+                    None =>  {
+                        "404"
+                    },
+                    Some(value) => {
+                        value
+                    }
+                };
+                    TheResponse = TheResponse+n+"\n";
+                }
+                rq.respond(Response::from_string(TheResponse));
+                    continue;
+            }
             let rs = File::open(Path::new(&("./".to_owned()+&path)));
             match rs {
                 Err(reason) => {
                     rq.respond(Response::from_string(format!("{:#?}", reason)));
-                    break;
+                    continue;
                 },
                 _ => {
                     ();
                 }
             }
-            
+
            let rs = rs.unwrap();
            rq.respond(Response::from_file(rs));
 
