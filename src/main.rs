@@ -2,6 +2,7 @@
 use std::path::Path;
 extern crate tiny_http;
 use std::fs::File;
+use std::fs;
 use tiny_http::{
     Server,
     Response,
@@ -69,7 +70,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
     let server = server.clone();
 
     let guard = thread::spawn(move || {
-        loop outer {
+       'outer: while true {
             let rq = server.recv().unwrap();
 
             println!("{:?}", &rq);
@@ -85,7 +86,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 let entries = fs::read_dir(path);
                 match entries {
                     Err(why) => {
-                        rq.respond(Response::from_string(format!("{:#?}", reason)));
+                        rq.respond(Response::from_string(format!("{:#?}", why)));
                         continue;
                     },
                     Ok(_value) => {()}
@@ -94,13 +95,10 @@ for _ in 0 .. 5 { //change this so user can choose threads
 
                 for entry in entries {
                     let mut shouldbreak = false;
-                    let entry = entry.unwrap_or_else(|e| {
-                        rq.respond(Response::from_string(format!("{:#?}", e)));
-                        shouldbreak = true;
-                    });
-                    if shouldbreak {
-                        continue outer;
-                    }
+                    let entry = entry;//.unwrap()
+                    /*if shouldbreak {
+                        continue 'outer;
+                    }*/
                     let path = entry.path();
                     TheResponse = TheResponse+path+"\n";
                 }
