@@ -47,8 +47,12 @@ struct Args {
 }
 
 
+use std::io::Write;
 
 fn main() {
+    let mut file = File::create("foo.txt").unwrap();
+    file.write_all(b"Hello, world!");
+    let standard = infer::get_from_path("./".to_owned()).unwrap(); //need to make fixes
 
     let args = Args::parse();
 
@@ -166,11 +170,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     value
                 },
                 None => {
-                    let y: f64 = rng.gen();
-                    File::create(String::from(y));
-                    infer::get_from_path("").unwrap()
+
                 }
-            }
+            };
             let kind = kind.mime_type();
            let rs = rs.unwrap();
            rq.respond(
