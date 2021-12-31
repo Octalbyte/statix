@@ -88,7 +88,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                    .with_status_code(
                     StatusCode(500)
                  )
-                 .with_header()
+                 .with_header(
+                    Header::from_bytes(&b"Content-Type"[..], &b"text/html"[..]).unwrap()
+                 )
                 );
                 continue; //bad request
             }
