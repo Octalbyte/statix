@@ -10,8 +10,11 @@ use tiny_http::{
     SslConfig,
     Request,
     Header,
-    StatusCode
+    StatusCode,
+    HeaderField
 };
+
+use ascii;
 
 use std::rc::Rc;
 
