@@ -127,7 +127,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                         i.as_str()
                     }
                 };
-                    TheResponse = TheResponse+"<a href = "+n+" >"+n+"</a>"+"</br>";
+                    let a: Vec<&str> =  n.split("/").collect();
+                    let a = a.last().unwrap();
+                    TheResponse = TheResponse+"<a href = "+n+" >"+a+"</a>"+"</br>";
                     //let v: Vec<&str> = "Mary had a little lamb".split(' ').collect();
                     //assert_eq!(v, ["Mary", "had", "a", "little", "lamb"]);
 
