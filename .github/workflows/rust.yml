@@ -13,4 +13,4 @@ jobs:
     steps:
 
     - name: Build (Ubuntu)
-      run: cargo build
+      run: ls
