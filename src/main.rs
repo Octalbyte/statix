@@ -128,6 +128,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     }
                 };
                     TheResponse = TheResponse+"<a href = "+n+" >"+n+"</a>"+"</br>";
+                    //let v: Vec<&str> = "Mary had a little lamb".split(' ').collect();
+                    //assert_eq!(v, ["Mary", "had", "a", "little", "lamb"]);
+
                 }
                 rq.respond(
                     Response::from_string(TheResponse)
