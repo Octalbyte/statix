@@ -94,7 +94,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 );
                 continue; //bad request
             }
+
             let b: bool = Path::new(&("./".to_owned()+ &path)).is_dir();
+
             if b {
                 let entries = fs::read_dir(Path::new(&("./".to_owned()+ &path)));
                 let entries = match entries {
@@ -145,6 +147,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 );
                 continue;
             }
+
             let rs = File::open(Path::new(&("./".to_owned()+&path)));
             match rs {
                 Err(reason) => {
@@ -155,9 +158,17 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     ();
                 }
             }
-
+           let ftype = fs::metadata("foo.txt").unwrap().file_type()
            let rs = rs.unwrap();
-           rq.respond(Response::from_file(rs));
+           rq.respond(
+               Response::from_file(rs).
+               .with_status_code(
+                StatusCode(200)
+             )
+             .with_header(
+                Header::from_bytes(&b"Content-Type"[..], &b"text/html"[..]).unwrap()
+             )
+            );
 
         }
     });
