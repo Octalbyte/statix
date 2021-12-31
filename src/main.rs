@@ -8,7 +8,9 @@ use tiny_http::{
     Response,
     ServerConfig,
     SslConfig,
-    Request
+    Request,
+    Header,
+    StatusCode
 };
 
 use std::rc::Rc;
@@ -77,10 +79,15 @@ for _ in 0 .. 5 { //change this so user can choose threads
             println!("{:?}", &rq);
             let path = String::from(rq.url());
 
-            if path.contains("../"){
+            if path.contains("../") || path.contains("\\") || path.contains(":") {
+               rq.respond(
+                   Response::from_string("<html><body><h1>BAD REQUEST 💀</h1></body></html>")
+                   .with_status_code(
+                    StatusCode(500)
+                 )
+                 .with_header()
+                );
                 continue; //bad request
-            } else {
-                //println!("Safe request: {}", path);
             }
             let b: bool = Path::new(&("./".to_owned()+ &path)).is_dir();
             if b {
