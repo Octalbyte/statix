@@ -1,5 +1,6 @@
-
+use infer;
 use std::path::Path;
+use rand::prelude::*;
 extern crate tiny_http;
 use std::fs::File;
 use std::fs;
@@ -22,8 +23,8 @@ use std::sync::Arc;
 mod lib; //must be fixed
 
 const about: &str = "CLI simple static file server";
-const version: &str = "0.1.0";
-const author: &str = "@J-P-S-O";
+const version: &str = "3.0.0";
+const author: &str = "@Octalbyte";
 
 use clap::Parser;
 
@@ -46,8 +47,12 @@ struct Args {
 }
 
 
+use std::io::Write;
 
 fn main() {
+    let mut file = File::create("foo.txt").unwrap();
+    file.write_all(b"Hello, world!");
+    let standard = infer::get_from_path("./".to_owned()).unwrap(); //need to make fixes
 
     let args = Args::parse();
 
@@ -94,7 +99,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 );
                 continue; //bad request
             }
+
             let b: bool = Path::new(&("./".to_owned()+ &path)).is_dir();
+
             if b {
                 let entries = fs::read_dir(Path::new(&("./".to_owned()+ &path)));
                 let entries = match entries {
@@ -127,7 +134,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                         i.as_str()
                     }
                 };
-                    TheResponse = TheResponse+"<a href = "+n+" >"+n+"</a>"+"</br>";
+                    let a: Vec<&str> =  n.split("/").collect();
+                    let a = a.last().unwrap();
+                    TheResponse = TheResponse+"<a href = "+n+" >"+a+"</a>"+"</br>";
                     //let v: Vec<&str> = "Mary had a little lamb".split(' ').collect();
                     //assert_eq!(v, ["Mary", "had", "a", "little", "lamb"]);
 
@@ -143,6 +152,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 );
                 continue;
             }
+
             let rs = File::open(Path::new(&("./".to_owned()+&path)));
             match rs {
                 Err(reason) => {
@@ -153,9 +163,27 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     ();
                 }
             }
+            let kind = infer::get_from_path("./".to_owned()+&path).unwrap();
 
+            let kind = match kind {
+                Some(value) => {
+                    value
+                },
+                None => {
+
+                }
+            };
+            let kind = kind.mime_type();
            let rs = rs.unwrap();
-           rq.respond(Response::from_file(rs));
+           rq.respond(
+               Response::from_file(rs)
+               .with_status_code(
+                StatusCode(200)
+             )
+             .with_header(
+                Header::from_bytes(&b"Content-Type"[..], &b"text/html"/*+kind*/[..]).unwrap()
+             )
+            );
 
         }
     });
