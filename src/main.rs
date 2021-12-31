@@ -106,7 +106,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     }
 
                 };
-                let mut TheResponse: String = String::from(format!("Scanning directory {}\n\n", &path));
+                let mut TheResponse: String = String::from(
+                    format!("<html><body><h1>Scanning directory {}</h1></br>", &path)
+                );
 
 
                 for entry in entries {
@@ -125,10 +127,18 @@ for _ in 0 .. 5 { //change this so user can choose threads
                         i.as_str()
                     }
                 };
-                    TheResponse = TheResponse+n+"\n";
+                    TheResponse = TheResponse+"<a href = "+n+" >"+n+"</a>"+"</br>";
                 }
-                rq.respond(Response::from_string(TheResponse));
-                    continue;
+                rq.respond(
+                    Response::from_string(TheResponse)
+                    .with_status_code(
+                        StatusCode(200)
+                     )
+                     .with_header(
+                        Header::from_bytes(&b"Content-Type"[..], &b"text/html"[..]).unwrap()
+                     )
+                );
+                continue;
             }
             let rs = File::open(Path::new(&("./".to_owned()+&path)));
             match rs {
