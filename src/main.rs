@@ -22,7 +22,7 @@ use std::sync::Arc;
 mod lib; //must be fixed
 
 const about: &str = "CLI simple static file server";
-const version: &str = "2.0.0";
+const version: &str = "3.0.0";
 const author: &str = "@Octalbyte";
 
 use clap::Parser;
