@@ -1,4 +1,4 @@
-
+use infer;
 use std::path::Path;
 extern crate tiny_http;
 use std::fs::File;
@@ -158,15 +158,20 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     ();
                 }
             }
-           let ftype = fs::metadata("foo.txt").unwrap().file_type();
+            let kind = infer::get_from_path("./".to_owned()+&path).unwrap();
+            let mut rkind = Type{
+
+            };
+            
+            let kind = kind.mime_type();
            let rs = rs.unwrap();
            rq.respond(
-               Response::from_file(rs).
+               Response::from_file(rs)
                .with_status_code(
                 StatusCode(200)
              )
              .with_header(
-                Header::from_bytes(&b"Content-Type"[..], &b"text/html"[..]).unwrap()
+                Header::from_bytes(&b"Content-Type"[..], &b"text/html"/*+kind*/[..]).unwrap()
              )
             );
 
