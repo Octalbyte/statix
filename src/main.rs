@@ -8,8 +8,13 @@ use tiny_http::{
     Response,
     ServerConfig,
     SslConfig,
-    Request
+    Request,
+    Header,
+    StatusCode,
+    HeaderField
 };
+
+use ascii;
 
 use std::rc::Rc;
 
@@ -37,6 +42,7 @@ struct Args {
     #[clap(short, long, default_value = "None")]
 
     crt: String
+
 }
 
 
@@ -76,10 +82,17 @@ for _ in 0 .. 5 { //change this so user can choose threads
             println!("{:?}", &rq);
             let path = String::from(rq.url());
 
-            if path.contains("../"){
+            if path.contains("../") || path.contains("\\") || path.contains(":") {
+               rq.respond(
+                   Response::from_string("<html><body><h1>BAD REQUEST 💀</h1></body></html>")
+                   .with_status_code(
+                    StatusCode(500)
+                 )
+                 .with_header(
+                    Header::from_bytes(&b"Content-Type"[..], &b"text/html"[..]).unwrap()
+                 )
+                );
                 continue; //bad request
-            } else {
-                //println!("Safe request: {}", path);
             }
             let b: bool = Path::new(&("./".to_owned()+ &path)).is_dir();
             if b {
@@ -99,12 +112,17 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 for entry in entries {
                     let path = entry.unwrap().path();
                     let n = path.as_path().to_str();
+                    let mut i = String::from("");
                     let n = match n{
                     None =>  {
                         "404"
                     },
                     Some(value) => {
-                        value
+                        i = String::from(value);
+                        i.remove(0);
+                        i.remove(0);
+                        i.remove(0);
+                        i.as_str()
                     }
                 };
                     TheResponse = TheResponse+n+"\n";
