@@ -1,5 +1,6 @@
 use infer;
 use std::path::Path;
+use rand::prelude::*;
 extern crate tiny_http;
 use std::fs::File;
 use std::fs;
@@ -165,7 +166,9 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     value
                 },
                 None => {
-                    
+                    let y: f64 = rng.gen();
+                    File::create(String::from(y));
+                    infer::get_from_path("").unwrap()
                 }
             }
             let kind = kind.mime_type();
