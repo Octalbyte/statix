@@ -159,10 +159,15 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 }
             }
             let kind = infer::get_from_path("./".to_owned()+&path).unwrap();
-            let mut rkind = Type{
 
-            };
-            
+            let kind = match kind {
+                Some(value) => {
+                    value
+                },
+                None => {
+                    
+                }
+            }
             let kind = kind.mime_type();
            let rs = rs.unwrap();
            rq.respond(
