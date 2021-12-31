@@ -37,6 +37,7 @@ struct Args {
     #[clap(short, long, default_value = "None")]
 
     crt: String
+
 }
 
 
@@ -99,12 +100,17 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 for entry in entries {
                     let path = entry.unwrap().path();
                     let n = path.as_path().to_str();
+                    let mut i = String::from("");
                     let n = match n{
                     None =>  {
                         "404"
                     },
                     Some(value) => {
-                        value
+                        i = String::from(value);
+                        i.remove(0);
+                        i.remove(0);
+                        i.remove(0);
+                        i.as_str()
                     }
                 };
                     TheResponse = TheResponse+n+"\n";
