@@ -7,7 +7,10 @@ use tiny_http::{
     StatusCode
 };
 
-pub use folder::main::ServerFolder;
+mod folder;
+
+pub folder::serveFolder;
+
 pub fn badRequest (rq: Request){
     rq.respond(
         Response::from_string("<html><body><h1>BAD REQUEST :(</h1></body></html>")
