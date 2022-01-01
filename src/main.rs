@@ -1,3 +1,5 @@
+use std::str::FromStr;
+use std::io::Write;
 use infer;
 use std::path::Path;
 use rand::prelude::*;
@@ -14,21 +16,17 @@ use tiny_http::{
     StatusCode,
     HeaderField
 };
-
 use ascii;
-
 use std::rc::Rc;
-
 use std::sync::Arc;
+use clap::Parser;
+use std::thread;
+
 mod lib; //must be fixed
 
 const about: &str = "CLI simple static file server";
 const version: &str = "3.0.0";
 const author: &str = "@Octalbyte";
-
-use clap::Parser;
-
-use std::thread;
 
 #[derive(Parser, Debug)]
 #[clap(about,version , author)]
@@ -46,18 +44,10 @@ struct Args {
 
 }
 
-
-use std::io::Write;
-
 fn main() {
-    let mut file = File::create("foo.txt").unwrap();
-    file.write_all(b"Hello, world!");
-    let standard = infer::get_from_path("./".to_owned()).unwrap(); //need to make fixes
 
     let args = Args::parse();
-
     println!("{}:{}", args.host, args.port);
-
     let to_bind = format!("{}:{}", args.host, args.port);
 
     let mut crt: Option<SslConfig> = None;
@@ -75,6 +65,7 @@ let server = Server::new(ServerConfig {
         ssl: crt
     }).unwrap();
 let server = Arc::new(server);
+
 let mut guards = Vec::with_capacity(5);
 
 for _ in 0 .. 5 { //change this so user can choose threads
@@ -100,9 +91,7 @@ for _ in 0 .. 5 { //change this so user can choose threads
                 continue; //bad request
             }
 
-            let b: bool = Path::new(&("./".to_owned()+ &path)).is_dir();
-
-            if b {
+            if Path::new(&("./".to_owned()+ &path)).is_dir() {
                 let entries = fs::read_dir(Path::new(&("./".to_owned()+ &path)));
                 let entries = match entries {
                     Err(why) => {
@@ -137,8 +126,6 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     let a: Vec<&str> =  n.split("/").collect();
                     let a = a.last().unwrap();
                     TheResponse = TheResponse+"<a href = "+n+" >"+a+"</a>"+"</br>";
-                    //let v: Vec<&str> = "Mary had a little lamb".split(' ').collect();
-                    //assert_eq!(v, ["Mary", "had", "a", "little", "lamb"]);
 
                 }
                 rq.respond(
@@ -163,28 +150,37 @@ for _ in 0 .. 5 { //change this so user can choose threads
                     ();
                 }
             }
-            let kind = infer::get_from_path("./".to_owned()+&path).unwrap();
 
-            let kind = match kind {
+            let kind = infer::get_from_path("./".to_owned()+&path).unwrap();
+            match kind {
                 Some(value) => {
-                    value
+                    let kind = value.mime_type();
+                    let rs = rs.unwrap();
+                    rq.respond(
+                        Response::from_file(rs)
+                        .with_status_code(
+                            StatusCode(200)
+                        )
+                        .with_header(
+                            Header::from_str(format!("Content-Type: {}", kind).as_str()).unwrap()
+                        )
+                    );
                 },
                 None => {
-
+                    let rs = rs.unwrap();
+                    rq.respond(
+                        Response::from_file(rs)
+                        .with_status_code(
+                            StatusCode(200)
+                        )
+                        .with_header(
+                            Header::from_bytes(
+                                &b"Content-Type"[..], &b"application/octet-stream"[..]
+                            ).unwrap()
+                        )
+                    );
                 }
             };
-            let kind = kind.mime_type();
-           let rs = rs.unwrap();
-           rq.respond(
-               Response::from_file(rs)
-               .with_status_code(
-                StatusCode(200)
-             )
-             .with_header(
-                Header::from_bytes(&b"Content-Type"[..], &b"text/html"/*+kind*/[..]).unwrap()
-             )
-            );
-
         }
     });
 
