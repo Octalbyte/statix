@@ -1,9 +1,10 @@
+extern crate tiny_http;
+
 use std::str::FromStr;
 use std::io::Write;
 use infer;
 use std::path::Path;
 use rand::prelude::*;
-extern crate tiny_http;
 use std::fs::File;
 use std::fs;
 use tiny_http::{
