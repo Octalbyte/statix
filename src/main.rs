@@ -4,15 +4,10 @@ use std::path::Path;
 use std::fs;
 use tiny_http::{
     Server,
-    Response,
     ServerConfig,
     SslConfig,
-    Request,
-    Header,
-    StatusCode,
-    HeaderField
+    Request
 };
-use ascii;
 use std::rc::Rc;
 use std::sync::Arc;
 use clap::Parser;
