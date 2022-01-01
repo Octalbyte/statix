@@ -22,7 +22,8 @@ use std::sync::Arc;
 use clap::Parser;
 use std::thread;
 
-mod lib; //must be fixed
+mod lib;
+mod handler;
 
 const about: &str = "CLI simple static file server";
 const version: &str = "3.0.0";
