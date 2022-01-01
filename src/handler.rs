@@ -6,7 +6,7 @@ use tiny_http::{
     Header,
     StatusCode
 };
-
+mod folder;
 pub use folder::serveFolder as serveFolder;
 
 pub fn badRequest (rq: Request){
