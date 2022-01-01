@@ -1,0 +1,1 @@
+Test folder to demonstrate the server's features and help developer testing.
