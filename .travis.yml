@@ -1,0 +1,14 @@
+dist: bionic
+language: rust
+rust:
+  - nightly
+
+jobs:
+  include:
+    - stage: Build
+      script:
+        - cargo build
+
+    - stage: Test
+      script:
+        - cargo test
