@@ -1,12 +1,10 @@
 extern crate tiny_http;
 
 use clap::Parser;
-use std::fs;
 use std::path::Path;
-use std::rc::Rc;
 use std::sync::Arc;
 use std::thread;
-use tiny_http::{Request, Server, ServerConfig, SslConfig};
+use tiny_http::{Server, ServerConfig, SslConfig};
 
 mod handler;
 mod lib;
@@ -26,6 +24,9 @@ struct Args {
 
     #[clap(short, long, default_value = "None")]
     crt: String,
+
+    #[clap(short, long, default_value = "10")]
+    threads: String,
 }
 
 fn main() {
@@ -37,8 +38,8 @@ fn main() {
     /*
         if (args.crt != "None"){
             crt = Some(SslConfig{
-                certificate: lib::Crt::public(args.crt),
-                private_key: lib::Crt::private(args.crt)
+                certificate: lib::crt::public(args.crt),
+                private_key: lib::crt::private(args.crt)
             })
         }
     */
@@ -52,12 +53,12 @@ fn main() {
 
     let mut guards = Vec::with_capacity(5);
 
-    for _ in 0..5 {
+    for _ in 0..args.threads.parse::<i32>().unwrap() {
         //change this so user can choose threads
         let server = server.clone();
 
         let guard = thread::spawn(move || {
-            'outer: while true {
+            loop {
                 let rq = server.recv().unwrap();
 
                 println!("{:?}", &rq);

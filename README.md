@@ -5,17 +5,19 @@ Static file server (Rust).
 
 ```bash
 cargo install statix
-statix 
+statix
 
 ```
 
 # Features and switches
 
---host 
+--host <String>
 
---port
+--port <i32>
 
 --crt (WIP)
+
+--threads<i32>
 
 # WIP
 
