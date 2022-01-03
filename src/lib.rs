@@ -1,4 +1,4 @@
-mod Crt {
+mod crt {
 
     pub fn public(filename: String) -> Vec<u8> {
         /*error supressor */

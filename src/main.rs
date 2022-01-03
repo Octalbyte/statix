@@ -38,8 +38,8 @@ fn main() {
     /*
         if (args.crt != "None"){
             crt = Some(SslConfig{
-                certificate: lib::Crt::public(args.crt),
-                private_key: lib::Crt::private(args.crt)
+                certificate: lib::crt::public(args.crt),
+                private_key: lib::crt::private(args.crt)
             })
         }
     */
