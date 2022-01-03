@@ -26,6 +26,9 @@ struct Args {
 
     #[clap(short, long, default_value = "None")]
     crt: String,
+
+    #[clap(short, long, default_value = "10")]
+    threads: String,
 }
 
 fn main() {
