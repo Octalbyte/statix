@@ -8,7 +8,22 @@ pub fn serveFile(rq: Request, path: &str) -> Result<(), Error> {
     let rs = File::open(Path::new(&("./".to_owned() + &path)));
     match rs {
         Err(reason) => {
-            let result = rq.respond(Response::from_string(format!("{:#?}", reason)));
+            match reason.code {
+                2 => {
+                    // create function to handle 404...
+                    let result = rq.respond(
+                        Response::from_string(format!("Could not find {}", path))
+                        .with_status_code(StatusCode(404))
+                    );
+                    return result;
+                },
+                _ => {}
+            }
+
+            let result = rq.respond(
+                Response::from_string("Internal error").
+                .with_status_code(StatusCode(502))
+            );
             return result;
         }
         _ => {
