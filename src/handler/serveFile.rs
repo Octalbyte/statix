@@ -2,9 +2,10 @@ use infer;
 use std::fs::File;
 use std::path::Path;
 use std::str::FromStr;
+use std::io::Error;
 use tiny_http::{Header, Request, Response, StatusCode};
 //use std::io::error::Error::IoError;
-pub fn serveFile(rq: Request, path: &str) -> Result<(), IoError> {
+pub fn serveFile(rq: Request, path: &str) -> Result<(), Error> {
     let rs = File::open(Path::new(&("./".to_owned() + &path)));
     match rs {
         Err(reason) => {
