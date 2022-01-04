@@ -3,7 +3,7 @@ use std::fs::File;
 use std::path::Path;
 use std::str::FromStr;
 use tiny_http::{Header, Request, Response, StatusCode};
-use std::io::error::Error::IoError;
+//use std::io::error::Error::IoError;
 pub fn serveFile(rq: Request, path: &str) -> Result<(), IoError> {
     let rs = File::open(Path::new(&("./".to_owned() + &path)));
     match rs {

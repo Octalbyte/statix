@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::Path;
 use tiny_http::{Header, Request, Response, StatusCode};
-use std::io::error::Error::IoError;
+//use std::io::error::Error::IoError;
 pub fn serveFolder(rq: Request, path: &str) -> Result<(), IoError> {
     let entries = fs::read_dir(Path::new(&("./".to_owned() + &path)));
     let entries = match entries {
