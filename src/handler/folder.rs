@@ -18,7 +18,7 @@ pub fn serveFolder(rq: Request, path: &str) -> Result<(), Error> {
         let n = path.as_path().to_str();
         let mut i = String::from("");
         let n = match n {
-            None => "404",
+            None => "Unlistable folder",
             Some(value) => {
                 i = String::from(value);
                 i.remove(0);

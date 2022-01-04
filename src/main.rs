@@ -1,10 +1,12 @@
 extern crate tiny_http;
+extern crate colored;
 
 use clap::Parser;
 use std::path::Path;
 use std::sync::Arc;
 use std::thread;
 use tiny_http::{Server, ServerConfig, SslConfig};
+use colored::*;
 
 mod handler;
 mod lib;
@@ -12,11 +14,6 @@ mod lib;
 const about: &str = "Simple CLI static file server";
 const version: &str = "3.0.0";
 const author: &str = "@Octalbyte";
-
-const bgRED: &str = "\[\033[41m\]";
-const fgWHITE: &str = "\[\033[37m\]";
-const bgGreen: &str = "\[\033[32m\]";
-const UNDERLINE: &str = "\[\033[4m\]";
 
 #[derive(Parser, Debug)]
 #[clap(about, version, author)]
@@ -66,20 +63,25 @@ fn main() {
             loop {
                 let rq = server.recv().unwrap();
 
-                println!("{:?}", &rq);
+                //println!("{:?}", &rq);
+
+                let mut output = format!("{:?}", &rq);
+
                 let path = String::from(rq.url());
 
                 if path.contains("../") || path.contains("\\") || path.contains(":") {
                     let i = handler::badRequest(rq);
+                    println!("{} -> {}", output, "500 Bad Request".red());
                     continue; //bad request
                 }
 
                 if Path::new(&("./".to_owned() + &path)).is_dir() {
-                    handler::serveFolder(rq, &path);
+                    let i = handler::serveFolder(rq, &path);
+                    println!("{} -> {}", output, "200 Served Folder".green());
                     continue;
                 }
 
-                handler::serveFile(rq, &path);
+                let _i = handler::serveFile(rq, &path);
             }
         });
 
