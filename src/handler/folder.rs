@@ -1,7 +1,8 @@
 use std::fs;
 use std::path::Path;
 use tiny_http::{Header, Request, Response, StatusCode};
-pub fn serveFolder(rq: Request, path: &str) {
+use std::io::error::Error::IoError;
+pub fn serveFolder(rq: Request, path: &str) -> Result<(), IoError> {
     let entries = fs::read_dir(Path::new(&("./".to_owned() + &path)));
     let entries = match entries {
         Err(why) => fs::read_dir("./").unwrap(),
@@ -30,9 +31,10 @@ pub fn serveFolder(rq: Request, path: &str) {
         let a = a.last().unwrap();
         TheResponse = TheResponse + "<a href = " + n + " >" + a + "</a>" + "</br>";
     }
-    rq.respond(
+    let result = rq.respond(
         Response::from_string(TheResponse)
             .with_status_code(StatusCode(200))
             .with_header(Header::from_bytes(&b"Content-Type"[..], &b"text/html"[..]).unwrap()),
     );
+    return result;
 }

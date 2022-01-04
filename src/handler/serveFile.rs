@@ -3,13 +3,13 @@ use std::fs::File;
 use std::path::Path;
 use std::str::FromStr;
 use tiny_http::{Header, Request, Response, StatusCode};
-
-pub fn serveFile(rq: Request, path: &str) {
+use std::io::error::Error::IoError;
+pub fn serveFile(rq: Request, path: &str) -> Result<(), IoError> {
     let rs = File::open(Path::new(&("./".to_owned() + &path)));
     match rs {
         Err(reason) => {
-            rq.respond(Response::from_string(format!("{:#?}", reason)));
-            return;
+            let result = rq.respond(Response::from_string(format!("{:#?}", reason)));
+            return result;
         }
         _ => {
             ();
@@ -21,17 +21,18 @@ pub fn serveFile(rq: Request, path: &str) {
         Some(value) => {
             let kind = value.mime_type();
             let rs = rs.unwrap();
-            rq.respond(
+            let result = rq.respond(
                 Response::from_file(rs)
                     .with_status_code(StatusCode(200))
                     .with_header(
                         Header::from_str(format!("Content-Type: {}", kind).as_str()).unwrap(),
                     ),
             );
+            return result;
         }
         None => {
             let rs = rs.unwrap();
-            rq.respond(
+            let result = rq.respond(
                 Response::from_file(rs)
                     .with_status_code(StatusCode(200))
                     .with_header(
@@ -39,6 +40,7 @@ pub fn serveFile(rq: Request, path: &str) {
                             .unwrap(),
                     ),
             );
+            return result;
         }
     };
 }
