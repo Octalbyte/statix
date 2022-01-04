@@ -1,5 +1,4 @@
 use tiny_http::{Header, Request, Response, StatusCode};
-//use std::io::error::Error::IoError;
 use std::io::Error;
 pub fn badRequest(rq: Request) -> Result<(), Error> {
     let result = rq.respond(
