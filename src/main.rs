@@ -13,6 +13,11 @@ const about: &str = "Simple CLI static file server";
 const version: &str = "3.0.0";
 const author: &str = "@Octalbyte";
 
+const bgRED: &str = "\[\033[41m\]";
+const fgWHITE: &str = "\[\033[37m\]";
+const bgGreen: &str = "\[\033[32m\]";
+const UNDERLINE: &str = "\[\033[4m\]";
+
 #[derive(Parser, Debug)]
 #[clap(about, version, author)]
 struct Args {
@@ -65,7 +70,7 @@ fn main() {
                 let path = String::from(rq.url());
 
                 if path.contains("../") || path.contains("\\") || path.contains(":") {
-                    handler::badRequest(rq);
+                    let i = handler::badRequest(rq);
                     continue; //bad request
                 }
 
