@@ -22,7 +22,6 @@ statix
 # WIP
 
 - Add certificate
-- Add links to directory listing
 - Use index.html
 - Use 404.html
 - --spa option
