@@ -82,6 +82,7 @@ fn main() {
                 }
 
                 let _i = handler::serveFile(rq, &path);
+
             }
         });
 
