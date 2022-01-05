@@ -12,7 +12,7 @@ mod handler;
 mod lib;
 
 const about: &str = "Simple CLI static file server";
-const version: &str = "3.0.0";
+const version: &str = "4.0.3";
 const author: &str = "@Octalbyte";
 
 #[derive(Parser, Debug)]
