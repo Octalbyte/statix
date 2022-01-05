@@ -1,3 +1,4 @@
+[![Statix](https://circleci.com/gh/statix-server/statix.svg?style=svg)](https://github.com/statix-server/statix/)
 # statix
 Static file server (Rust).
 
