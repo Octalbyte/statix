@@ -1,28 +1,51 @@
+extern crate colored;
+
+use colored::*;
 use infer;
 use std::fs::File;
 use std::path::Path;
 use std::str::FromStr;
 use std::io::Error;
+use std::io;
+use std::io::ErrorKind;
 use tiny_http::{Header, Request, Response, StatusCode};
+
 pub fn serveFile(rq: Request, path: &str) -> Result<(), Error> {
     let rs = File::open(Path::new(&("./".to_owned() + &path)));
+    let output = format!("{:?}", &rq);
     match rs {
         Err(reason) => {
-            match reason.code {
-                2 => {
+            //rq.respond(Response::from_string(format!("{:?}", reason)));
+            //return Ok(());
+            match reason.kind() {
+
+                ErrorKind::NotFound => {
                     // create function to handle 404...
                     let result = rq.respond(
                         Response::from_string(format!("Could not find {}", path))
                         .with_status_code(StatusCode(404))
                     );
+                    println!(
+                        "{} -> {}",
+                        output,
+                        "404 Not Found".red()
+                    );
+
                     return result;
                 },
                 _ => {}
             }
 
             let result = rq.respond(
-                Response::from_string("Internal error").
+                Response::from_string("Internal error")
                 .with_status_code(StatusCode(502))
+            );
+            let internal = format!("{:?}", reason);
+            println!(
+                "{} -> {} -> {}",
+                output,
+                "502 Internal Error".red(),
+                internal.bold()
             );
             return result;
         }
