@@ -53,7 +53,7 @@ fn main() {
     .unwrap();
     let server = Arc::new(server);
 
-    let mut guards = Vec::with_capacity(5);
+    let mut guards = Vec::with_capacity(args.threads.parse::<usize>().unwrap());
 
     for _ in 0..args.threads.parse::<i32>().unwrap() {
         //change this so user can choose threads
