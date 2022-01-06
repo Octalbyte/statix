@@ -20,7 +20,7 @@ pub fn serveFolder(rq: Request, path: &str) -> Result<(), Error> {
         Some(parent) => {
             match parent.to_str() {
                 Some(parent) => {
-                    TheResponse = TheResponse + "<a href = " + parent + " > ..  </a></br>";
+                    TheResponse = TheResponse + "<a href = " + parent + " > <b> .. (parent folder) </b> </a></br>";
                 },
                 None => {
 
