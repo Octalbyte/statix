@@ -12,6 +12,26 @@ pub fn serveFolder(rq: Request, path: &str) -> Result<(), Error> {
         "<html><body><h1>Scanning directory {}</h1></br>",
         &path
     ));
+    let p = &("./".to_owned() + &path);
+    let parent = Path::new(p).parent();
+    //println!("{}", parent);
+
+    match parent {
+        Some(parent) => {
+            match parent.to_str() {
+                Some(parent) => {
+                    TheResponse = TheResponse + "<a href = " + parent + " > ..  </a></br>";
+                },
+                None => {
+
+                }
+            }
+
+        },
+        None => {
+
+        }
+    }
 
     for entry in entries {
         let path = entry.unwrap().path();
