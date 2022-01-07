@@ -5,7 +5,7 @@ use std::io::Error;
 pub fn serveFolder(rq: Request, path: &str) -> Result<(), Error> {
     let entries = fs::read_dir(Path::new(&("./".to_owned() + &path)));
     let entries = match entries {
-        Err(why) => fs::read_dir("./").unwrap(),
+        Err(_why) => fs::read_dir("./").unwrap(),
         Ok(value) => value,
     };
     let mut TheResponse: String = String::from(format!(

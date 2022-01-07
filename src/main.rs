@@ -36,7 +36,7 @@ fn main() {
     println!("{}:{}", args.host, args.port);
     let to_bind = format!("{}:{}", args.host, args.port);
 
-    let mut crt: Option<SslConfig> = None;
+    let crt: Option<SslConfig> = None;
     /*
         if (args.crt != "None"){
             crt = Some(SslConfig{
@@ -65,18 +65,18 @@ fn main() {
 
                 //println!("{:?}", &rq);
 
-                let mut output = format!("{:?}", &rq);
+                let output = format!("{:?}", &rq);
 
                 let path = String::from(rq.url());
 
                 if path.contains("../") || path.contains("\\") || path.contains(":") {
-                    let i = handler::badRequest(rq);
+                    let _i = handler::badRequest(rq);
                     println!("{} -> {}", output, "500 Bad Request".red());
                     continue; //bad request
                 }
 
                 if Path::new(&("./".to_owned() + &path)).is_dir() {
-                    let i = handler::serveFolder(rq, &path);
+                    let _i = handler::serveFolder(rq, &path);
                     println!("{} -> {}", output, "200 Served Folder".green());
                     continue;
                 }

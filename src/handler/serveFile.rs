@@ -6,7 +6,7 @@ use std::fs::File;
 use std::path::Path;
 use std::str::FromStr;
 use std::io::Error;
-use std::io;
+
 use std::io::ErrorKind;
 use tiny_http::{Header, Request, Response, StatusCode};
 
