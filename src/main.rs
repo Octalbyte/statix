@@ -1,12 +1,12 @@
-extern crate tiny_http;
 extern crate colored;
+extern crate tiny_http;
 
 use clap::Parser;
+use colored::*;
 use std::path::Path;
 use std::sync::Arc;
 use std::thread;
 use tiny_http::{Server, ServerConfig, SslConfig};
-use colored::*;
 
 mod handler;
 mod lib;
@@ -82,7 +82,6 @@ fn main() {
                 }
 
                 let _i = handler::serveFile(rq, &path);
-
             }
         });
 
