@@ -12,7 +12,7 @@ mod handler;
 mod lib;
 
 const about: &str = "Simple CLI static file server";
-const version: &str = "4.2.3";
+const version: &str = "4.3.3";
 const author: &str = "@Octalbyte";
 
 #[derive(Parser, Debug)]
@@ -79,6 +79,11 @@ fn main() {
                 }
 
                 if Path::new(&("./".to_owned() + &path)).is_dir() {
+                    if Path::new(&("./".to_owned() + &path + "/index.html")).exists() {
+                        let _i = handler::serveFile(rq, &("./".to_owned() + &path + "/index.html"));
+                        println!("{} -> {}", output, "200 Served index.html".green());
+                        continue;
+                    }
                     let _i = handler::serveFolder(rq, &path);
                     println!("{} -> {}", output, "200 Served Folder".green());
                     continue;
