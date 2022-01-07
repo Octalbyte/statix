@@ -68,6 +68,9 @@ fn main() {
                 let output = format!("{:?}", &rq);
 
                 let path = String::from(rq.url());
+                let path = path.split("?");
+                let path: Vec<&str> = path.collect();
+                let path = path[0];
 
                 if path.contains("../") || path.contains("\\") || path.contains(":") {
                     let _i = handler::badRequest(rq);
