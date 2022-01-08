@@ -20,6 +20,13 @@ pub fn serveFile(rq: Request, path: &str) -> Result<(), Error> {
             match reason.kind() {
                 ErrorKind::NotFound => {
                     // create function to handle 404...
+
+                    if Path::new("./404.html").exists() {
+                        let result = serveFile(rq, "./404.html");
+                        println!("{} -> {}", output, "404 Not Found".red());
+                        return result;
+                    }
+
                     let result = rq.respond(
                         Response::from_string(format!("Could not find {}", path))
                             .with_status_code(StatusCode(404)),
