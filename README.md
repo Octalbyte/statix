@@ -13,16 +13,12 @@ statix
 
 # Features and switches
 
---host <String>
-
---port <i32>
-
---crt (WIP)
-
---threads<i32>
+- `--host <String>`  set host
+- `--port <i32>` set port
+- `--ssl <bool>` set if server should have ssl, then set file paths with `--crt <String>` and `--key <String>`
+- `--threads<i32>` set number of threads to be spawned
 
 # WIP
 
-- Add certificate
 - --spa option
 - Automatically compile markdown files
