@@ -24,8 +24,14 @@ struct Args {
     #[clap(short, long, default_value = "8080")]
     port: u32,
 
-    #[clap(short, long, default_value = "None")]
+    #[clap(short, long, default_value = "cert.pem")]
     crt: String,
+
+    #[clap(short, long, default_value = "key.pem")]
+    key: String,
+
+    #[clap(short, long)]
+    ssl: bool,
 
     #[clap(short, long, default_value = "10")]
     threads: String,
@@ -36,15 +42,15 @@ fn main() {
     println!("{}:{}", args.host, args.port);
     let to_bind = format!("{}:{}", args.host, args.port);
 
-    let crt: Option<SslConfig> = None;
-    /*
-        if (args.crt != "None"){
+    let mut crt: Option<SslConfig> = None;
+
+        if (args.ssl == true){
             crt = Some(SslConfig{
                 certificate: lib::crt::public(args.crt),
-                private_key: lib::crt::private(args.crt)
+                private_key: lib::crt::private(args.key)
             })
         }
-    */
+
 
     let server = Server::new(ServerConfig {
         addr: to_bind,
