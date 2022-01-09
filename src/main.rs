@@ -43,14 +43,14 @@ fn main() {
     let to_bind = format!("{}:{}", args.host, args.port);
 
     let mut crt: Option<SslConfig> = None;
-    /*
+
         if (args.ssl == true){
             crt = Some(SslConfig{
                 certificate: lib::crt::public(args.crt),
                 private_key: lib::crt::private(args.key)
             })
         }
-    */
+
 
     let server = Server::new(ServerConfig {
         addr: to_bind,
