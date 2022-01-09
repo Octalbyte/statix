@@ -1,6 +1,7 @@
 [![Statix](https://circleci.com/gh/statix-server/statix.svg?style=svg)](https://github.com/statix-server/statix/)
+!(Made with love by @Octalbyte)[https://github.com/Octalbyte/]
 # statix
-Static file server (Rust).  ![Made with love by @Octalbyte](https://github.com/Octalbyte/)
+Static file server (Rust).
 
 # Install
 
