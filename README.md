@@ -1,6 +1,6 @@
 [![Statix](https://circleci.com/gh/statix-server/statix.svg?style=svg)](https://github.com/statix-server/statix/)
 # statix
-Static file server (Rust).
+Static file server (Rust).  ![Made with love by @Octalbyte](https://github.com/Octalbyte/)
 
 # Install
 
@@ -23,7 +23,5 @@ statix
 # WIP
 
 - Add certificate
-- Use index.html
-- Use 404.html
 - --spa option
 - Automatically compile markdown files
