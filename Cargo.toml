@@ -15,6 +15,6 @@ categories = ["web-programming::http-server"]
 [dependencies]
 colored = "2"
 tiny_http = "0.9"
-infer = "0.5.0"
+infer = "0.6.0"
 clap = { version = "3.0.0-rc.8", features = ["derive"] }
 
