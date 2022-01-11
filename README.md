@@ -20,5 +20,4 @@ statix
 
 # WIP
 
-- --spa option
 - Automatically compile markdown files
