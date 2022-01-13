@@ -18,3 +18,7 @@ statix #On the folder you want to host
 - `--ssl <bool>` set if server should have ssl, then set file paths with `--crt <String>` (default cert.pem) and `--key <String>` (default key.pem)
 - `--threads<i32>` set number of threads to be spawned
 - `--help` display more help
+
+### Wip
+
+add cors
