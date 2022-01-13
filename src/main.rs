@@ -12,7 +12,7 @@ mod handler;
 mod lib;
 
 const about: &str = "Simple CLI static file server";
-const version: &str = "4.5.1";
+const version: &str = "4.6.0";
 const author: &str = "@Octalbyte";
 
 #[derive(Parser, Debug)]
@@ -39,7 +39,7 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    println!("{}:{}", args.host, args.port);
+    println!("Binding to {}:{}", args.host, args.port);
     let to_bind = format!("{}:{}", args.host, args.port);
 
     let mut crt: Option<SslConfig> = None;
