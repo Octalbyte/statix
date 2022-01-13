@@ -17,7 +17,4 @@ statix #On the folder you want to host
 - `--port <i32>` set port
 - `--ssl <bool>` set if server should have ssl, then set file paths with `--crt <String>` (default cert.pem) and `--key <String>` (default key.pem)
 - `--threads<i32>` set number of threads to be spawned
-
-# WIP
-
-- Automatically compile markdown files
+- `--help` display more help
