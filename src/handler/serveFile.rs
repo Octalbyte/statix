@@ -6,7 +6,7 @@ use std::fs::File;
 use std::io::Error;
 use std::path::Path;
 use std::str::FromStr;
-
+use std::fs;
 use std::io::ErrorKind;
 use tiny_http::{Header, Request, Response, StatusCode};
 
@@ -59,11 +59,15 @@ pub fn serveFile(rq: Request, path: &str) -> Result<(), Error> {
         Some(value) => {
             let kind = value.mime_type();
             let rs = rs.unwrap();
+            let length = fs::metadata(&path).unwrap().len();
             let result = rq.respond(
                 Response::from_file(rs)
                     .with_status_code(StatusCode(200))
                     .with_header(
-                        Header::from_str(format!("Content-Type: {}", kind).as_str()).unwrap(),
+                        Header::from_str(format!("Content-Type: {}", kind).as_str()).unwrap()
+                    )
+                    .with_header(
+                        Header::from_str(format!("Content-Length: {}", length).as_str()).unwrap()
                     ),
             );
             return result;
