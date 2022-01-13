@@ -39,7 +39,7 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    println!("{}:{}", args.host, args.port);
+    println!("Binding to {}:{}", args.host, args.port);
     let to_bind = format!("{}:{}", args.host, args.port);
 
     let mut crt: Option<SslConfig> = None;
