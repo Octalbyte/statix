@@ -21,4 +21,4 @@ statix #On the folder you want to host
 
 ### Wip
 
-add cors
+add optional cors header
