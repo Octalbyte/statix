@@ -3,11 +3,11 @@
 # statix
 Static file server (Rust).
 
-# Install
+# Install and Run
 
 ```bash
 cargo install statix
-statix
+statix #On the folder you want to host
 
 ```
 
