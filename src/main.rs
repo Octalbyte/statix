@@ -12,7 +12,7 @@ mod handler;
 mod lib;
 
 const about: &str = "Simple CLI static file server";
-const version: &str = "4.6.0";
+const version: &str = "4.6.1";
 const author: &str = "@Octalbyte";
 
 #[derive(Parser, Debug)]
@@ -35,12 +35,17 @@ struct Args {
 
     #[clap(short, long, default_value = "10")]
     threads: String,
+
+    #[clap(long, default_value = "")]
+    cors: String,
 }
 
 fn main() {
     let args = Args::parse();
     println!("Binding to {}:{}", args.host, args.port);
     let to_bind = format!("{}:{}", args.host, args.port);
+    let argCors = args.cors.as_str();
+    let cors = Arc::new(args.cors);
 
     let mut crt: Option<SslConfig> = None;
 
@@ -62,10 +67,10 @@ fn main() {
     let mut guards = Vec::with_capacity(args.threads.parse::<usize>().unwrap());
 
     for _ in 0..args.threads.parse::<i32>().unwrap() {
-        //change this so user can choose threads
-        let server = server.clone();
 
-        let guard = thread::spawn(move || {
+        let server = server.clone();
+        let cors = cors.clone();
+        let guard = thread::spawn( move || {
             loop {
                 let rq = server.recv().unwrap();
 
@@ -86,7 +91,7 @@ fn main() {
 
                 if Path::new(&("./".to_owned() + &path)).is_dir() {
                     if Path::new(&("./".to_owned() + &path + "/index.html")).exists() {
-                        let _i = handler::serveFile(rq, &("./".to_owned() + &path + "/index.html"));
+                        let _i = handler::serveFile(rq, &("./".to_owned() + &path + "/index.html"), &cors);
                         println!("{} -> {}", output, "200 Served index.html".green());
                         continue;
                     }
@@ -95,7 +100,7 @@ fn main() {
                     continue;
                 }
 
-                let _i = handler::serveFile(rq, &path);
+                let _i = handler::serveFile(rq, &path, &cors);
             }
         });
 

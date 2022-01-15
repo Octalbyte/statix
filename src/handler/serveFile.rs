@@ -10,7 +10,9 @@ use std::fs;
 use std::io::ErrorKind;
 use tiny_http::{Header, Request, Response, StatusCode};
 
-pub fn serveFile(rq: Request, path: &str) -> Result<(), Error> {
+pub fn serveFile(rq: Request, path: &str, cors: &str) -> Result<(), Error> {
+    //println!("{}", cors);
+
     let rs = File::open(Path::new(&("./".to_owned() + &path)));
     let output = format!("{:?}", &rq);
     match rs {
@@ -22,7 +24,7 @@ pub fn serveFile(rq: Request, path: &str) -> Result<(), Error> {
                     // create function to handle 404...
 
                     if Path::new("./404.html").exists() {
-                        let result = serveFile(rq, "./404.html");
+                        let result = serveFile(rq, "./404.html", &cors);
                         println!("{} -> {}", output, "404 Not Found".red());
                         return result;
                     }
@@ -68,7 +70,12 @@ pub fn serveFile(rq: Request, path: &str) -> Result<(), Error> {
                     )
                     .with_header(
                         Header::from_str(format!("Content-Length: {}", length).as_str()).unwrap()
-                    ),
+                    )
+                    .with_header(
+                        Header::from_str(format!("Access-Control-Allow-Origin: {}", cors).as_str()).unwrap()
+
+                    )
+                    ,
             );
             return result;
         }
