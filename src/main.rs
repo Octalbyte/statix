@@ -76,7 +76,7 @@ fn main() {
 
         let server = server.clone();
         let cors = cors.clone();
-        let blocktor = block_tor.clone();
+        let blocktor = Arc::clone(&block_tor);
         let guard = thread::spawn( move || {
             loop {
                 let rq = server.recv().unwrap();
@@ -86,13 +86,9 @@ fn main() {
 
                 let output = format!("{:?}", &rq);
                // println!("{}",format!("{}", &rq.remote_addr()).as_str());
-               println!("{:?}", Arc::<bool>::try_unwrap((&blocktor).to_owned()));
-               let argtorblock = match Arc::<bool>::try_unwrap((&blocktor).to_owned()) {
-                   Err(true) => true,
-                   Ok(true) => true,
-                   _ => false
-               };
-                if argtorblock {
+               // println!("{:?}", &blocktor);
+
+                if *blocktor {
                     let str_to_be_checked = format!("{}", &rq.remote_addr());
                     let str_to_be_checked =  String::from(str_to_be_checked);
                     let str_to_be_checked = str_to_be_checked.split(":");
@@ -100,8 +96,8 @@ fn main() {
                     let str_to_be_checked = String::from(str_to_be_checked[0]);
                     let str_to_be_checked = str_to_be_checked.as_str();
                     //println!("{}", &str_to_be_checked);
-                    if istor::istor(str_to_be_checked, false) || true {
-                        println!("Blocked tor request");
+                    if istor::istor(str_to_be_checked, false){
+                        println!("{} -> {}", output, "Blocked TOR request".red());
                         rq.respond(
                             Response::from_string("You can't use Tor here ¯\\_(ツ)_/¯")
                             .with_status_code(StatusCode(500))
