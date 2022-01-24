@@ -1,6 +1,6 @@
 [package]
 name = "statix"
-version = "4.6.2"
+version = "4.7.0"
 edition = "2018"
 description = "A CLI http server for static file sharing"
 license = "MIT"
@@ -17,4 +17,4 @@ colored = "2"
 tiny_http = "0.10"
 infer = "0.6.0"
 clap = { version = "3.0.0-rc.8", features = ["derive"] }
-
+istor = "0.1.2"
