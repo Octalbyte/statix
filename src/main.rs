@@ -2,11 +2,12 @@ extern crate colored;
 extern crate tiny_http;
 
 use clap::Parser;
+use istor::istor;
 use colored::*;
 use std::path::Path;
 use std::sync::Arc;
 use std::thread;
-use tiny_http::{Server, ServerConfig, SslConfig};
+use tiny_http::{Server, ServerConfig, SslConfig, StatusCode, Response};
 
 mod handler;
 mod lib;
@@ -38,6 +39,9 @@ struct Args {
 
     #[clap(long, default_value = "")]
     cors: String,
+
+    #[clap(long)]
+    blocktor: bool,
 }
 
 fn main() {
@@ -46,6 +50,8 @@ fn main() {
     let to_bind = format!("{}:{}", args.host, args.port);
     let argCors = args.cors.as_str();
     let cors = Arc::new(args.cors);
+//    println!("{}", &args.blocktor);
+    let block_tor = Arc::new(args.blocktor);
 
     let mut crt: Option<SslConfig> = None;
 
@@ -70,13 +76,35 @@ fn main() {
 
         let server = server.clone();
         let cors = cors.clone();
+        let blocktor = Arc::clone(&block_tor);
         let guard = thread::spawn( move || {
             loop {
                 let rq = server.recv().unwrap();
 
+
                 //println!("{:?}", &rq);
 
                 let output = format!("{:?}", &rq);
+               // println!("{}",format!("{}", &rq.remote_addr()).as_str());
+               // println!("{:?}", &blocktor);
+
+                if *blocktor {
+                    let str_to_be_checked = format!("{}", &rq.remote_addr());
+                    let str_to_be_checked =  String::from(str_to_be_checked);
+                    let str_to_be_checked = str_to_be_checked.split(":");
+                    let str_to_be_checked: Vec<&str> = str_to_be_checked.collect();
+                    let str_to_be_checked = String::from(str_to_be_checked[0]);
+                    let str_to_be_checked = str_to_be_checked.as_str();
+                    //println!("{}", &str_to_be_checked);
+                    if istor::istor(str_to_be_checked, false){
+                        println!("{} -> {}", output, "Blocked TOR request".red());
+                        rq.respond(
+                            Response::from_string("You can't use Tor here ¯\\_(ツ)_/¯")
+                            .with_status_code(StatusCode(500))
+                        );
+                        continue;
+                    }
+                }
 
                 let path = String::from(rq.url());
                 let path = path.split("?");
