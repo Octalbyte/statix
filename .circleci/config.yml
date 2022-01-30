@@ -7,8 +7,12 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "Add OpenSSL"
+          command: "apk add openssl"
+      - run:
           name: "Build"
           command: "cargo build"
+          
 
 workflows:
   test-cargo:
