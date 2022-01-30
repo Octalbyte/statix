@@ -1,4 +1,4 @@
-[![Statix](https://circleci.com/gh/statix-server/statix.svg?style=svg)](https://github.com/statix-server/statix/)
+[![Statix](https://circleci.com/gh/Octalbyte/statix.svg?style=svg)](https://github.com/Octalbyte/statix/)
          Made with ❤ by [@Octalbyte](https://github.com/Octalbyte/)
 # statix
 Static file server (Rust).
