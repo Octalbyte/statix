@@ -3,12 +3,9 @@ version: 2.1
 jobs:
   Build:
     docker:
-      - image: cimg/rust:1.57.0
+      - image: cimg/rust:1.58.0
     steps:
       - checkout
-      - run:
-          name: "Add OpenSSL"
-          command: "apk add openssl"
       - run:
           name: "Build"
           command: "cargo build"
