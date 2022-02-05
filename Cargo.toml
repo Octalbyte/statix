@@ -18,3 +18,4 @@ infer = "0.6.0"
 clap = { version = "3.0.0-rc.8", features = ["derive"] }
 istor = "0.1.2"
 base64 = "0.13.0"
+ascii = "1.0.0"

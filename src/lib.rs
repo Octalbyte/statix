@@ -1,7 +1,7 @@
 pub mod crt {
 
     pub fn public(_filename: String) -> Vec<u8> {
-        use std::io;
+        
         use std::io::Read;
         use std::io::BufReader;
         use std::fs::File;
@@ -14,7 +14,7 @@ pub mod crt {
         return buffer;
     }
     pub fn private(_filename: String) -> Vec<u8> {
-        use std::io;
+        
         use std::io::Read;
         use std::io::BufReader;
         use std::fs::File;

@@ -1,6 +1,7 @@
 extern crate colored;
 extern crate tiny_http;
 extern crate base64;
+extern crate ascii;
 
 use clap::Parser;
 use istor::istor;
@@ -9,6 +10,7 @@ use std::path::Path;
 use std::sync::Arc;
 use std::thread;
 use tiny_http::{Server, ServerConfig, SslConfig, StatusCode, Response, HeaderField};
+use ascii::AsciiStr;
 
 mod handler;
 mod lib;
@@ -69,7 +71,7 @@ fn main() {
 
     let mut crt: Option<SslConfig> = None;
 
-        if (args.ssl == true){
+        if args.ssl {
             crt = Some(SslConfig{
                 certificate: lib::crt::public(args.crt),
                 private_key: lib::crt::private(args.key)
@@ -95,33 +97,25 @@ fn main() {
         let pass = pwd.clone();
         let blocktor = Arc::clone(&block_tor);
         let guard = thread::spawn( move || {
-            loop {
+            'outer: loop {
                 let rq = server.recv().unwrap();
-                let headers = rq.headers();
+                
+				
+				let headers = rq.headers();
                 let mut auth = None;
                 for i in headers.iter() {
-                    if i.field == HeaderField::from_bytes(&b"Authorization") {
+                    if i.field == HeaderField::from_bytes("Authorization".as_bytes().to_vec()).unwrap() {
                         let wrds = i.value;
-                        let wrds = i.value.split(" ");
-                        if wrds.len() != 3 {
-                            continue;
+                        let wrds: Vec<&AsciiStr> = i.value.split(ascii::AsciiChar::Space).collect();
+                        if wrds.len() < 3 {
+                            continue 'outer;
                             //bad request
                         }
                         if wrds[1] != "Basic" {
-                            continue;
+                            continue 'outer;
                             //bad request
                         }
-                        let decoded = base64::decode(wrds[2], base64::STANDARD).unwrap_or_else(|e|{
-                            println!("Bad request... {}", e);
-                            continue;
-                            //bad request
-                        });
-                        let decoded = std::str::from_utf8(decoded).unwrap_or_else(|e| {
-                            println!("Bad request... {}", e);
-                            continue;
-                            //bad request
-                        })
-                        auth = Some()
+                        auth = Some(wrds[2]);
                     }
                 }
                 //println!("{:?}", &rq);
