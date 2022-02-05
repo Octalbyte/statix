@@ -2,7 +2,6 @@ extern crate colored;
 extern crate tiny_http;
 extern crate base64;
 
-use base64;
 use clap::Parser;
 use istor::istor;
 use colored::*;
