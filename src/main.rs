@@ -99,23 +99,45 @@ fn main() {
         let guard = thread::spawn( move || {
             'outer: loop {
                 let rq = server.recv().unwrap();
-                
-				
+                			
 				let headers = rq.headers();
                 let mut auth = None;
                 for i in headers.iter() {
                     if i.field == HeaderField::from_bytes("Authorization".as_bytes().to_vec()).unwrap() {
-                        let wrds = i.value;
+                        let wrds = &i.value;
                         let wrds: Vec<&AsciiStr> = i.value.split(ascii::AsciiChar::Space).collect();
-                        if wrds.len() < 3 {
+                        if *restricted && wrds.len() < 3 {
+                            handler::unauthorized(rq);
                             continue 'outer;
                             //bad request
                         }
-                        if wrds[1] != "Basic" {
+                        if *restricted && wrds[1] != "Basic" {
+                            handler::unauthorized(rq);
                             continue 'outer;
                             //bad request
                         }
                         auth = Some(wrds[2]);
+                    }
+                }
+                //println!("{:?}", auth);
+
+                if *restricted {
+                    match auth {
+                        None => {
+                            handler::unauthorized(rq);
+                            //401 unauthorized
+                            continue 'outer;
+                        }
+                        Some(authtry) => {
+                        if base64::encode(format!("{}:{}", username, pass).as_bytes()) == String::from(authtry.as_str()) {
+                            // Dont do anything 
+                        } else {
+                            handler::unauthorized(rq);
+                            //401 Unauthorized
+                            continue 'outer;
+                        }
+
+                        }
                     }
                 }
                 //println!("{:?}", &rq);
