@@ -1,6 +1,6 @@
 use std::io::Error;
 use tiny_http::{
-    Request, Response, HeaderField, Header, StatusCode
+    Request, Response, Header, StatusCode
     
 };
 

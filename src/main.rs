@@ -57,7 +57,7 @@ fn main() {
     let args = Args::parse();
     println!("Binding to {}:{}", args.host, args.port);
     let to_bind = format!("{}:{}", args.host, args.port);
-    let argCors = args.cors.as_str();
+    let _argCors = args.cors.as_str();
     let cors = Arc::new(args.cors);
     let mut restricted = Arc::new(false);
     let pwd = Arc::new(args.pwd);
@@ -106,7 +106,7 @@ fn main() {
                     //println!("{}", i);
                     if i.field == HeaderField::from_bytes("Authorization".as_bytes().to_vec()).unwrap() {
                         //println!("Got the header");
-                        let wrds = &i.value;
+                        let _wrds = &i.value;
                         let wrds: Vec<&AsciiStr> = i.value.split(ascii::AsciiChar::Space).collect();
                         if *restricted && wrds.len() < 2 {
                             //println!("break 1: len is {}", wrds.len());
