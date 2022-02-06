@@ -4,6 +4,7 @@ use tiny_http::{
     
 };
 
+#[allow(non_snake_case)]
 pub fn unauthorized(rq: Request) -> Result<(), Error> {
     let result = rq.respond(
         Response::from_string("401 Unauthorized")

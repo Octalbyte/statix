@@ -10,6 +10,7 @@ use std::fs;
 use std::io::ErrorKind;
 use tiny_http::{Header, Request, Response, StatusCode};
 
+#[allow(non_snake_case)]
 pub fn serveFile(rq: Request, path: &str, cors: &str) -> Result<(), Error> {
     //println!("{}", cors);
 

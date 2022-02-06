@@ -15,8 +15,14 @@ use ascii::AsciiStr;
 mod handler;
 mod lib;
 
+#[allow(non_upper_case_globals)]
+#[allow(dead_code)]
 const about: &str = "Simple CLI static file server";
+#[allow(dead_code)]
+#[allow(non_upper_case_globals)]
 const version: &str = "4.6.2";
+#[allow(dead_code)]
+#[allow(non_upper_case_globals)]
 const author: &str = "@Octalbyte";
 
 #[derive(Parser, Debug)]
@@ -57,7 +63,6 @@ fn main() {
     let args = Args::parse();
     println!("Binding to {}:{}", args.host, args.port);
     let to_bind = format!("{}:{}", args.host, args.port);
-    let _argCors = args.cors.as_str();
     let cors = Arc::new(args.cors);
     let mut restricted = Arc::new(false);
     let pwd = Arc::new(args.pwd);

@@ -2,6 +2,8 @@ use std::fs;
 use std::io::Error;
 use std::path::Path;
 use tiny_http::{Header, Request, Response, StatusCode};
+
+#[allow(non_snake_case)]
 pub fn serveFolder(rq: Request, path: &str) -> Result<(), Error> {
     let entries = fs::read_dir(Path::new(&("./".to_owned() + &path)));
     let entries = match entries {
@@ -32,7 +34,7 @@ pub fn serveFolder(rq: Request, path: &str) -> Result<(), Error> {
     for entry in entries {
         let path = entry.unwrap().path();
         let n = path.as_path().to_str();
-        let mut i = String::from("");
+        let mut i;
         let n = match n {
             None => "Unlistable folder",
             Some(value) => {
