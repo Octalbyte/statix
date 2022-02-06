@@ -103,25 +103,31 @@ fn main() {
 				let headers = rq.headers();
                 let mut auth = None;
                 for i in headers.iter() {
+                    //println!("{}", i);
                     if i.field == HeaderField::from_bytes("Authorization".as_bytes().to_vec()).unwrap() {
+                        //println!("Got the header");
                         let wrds = &i.value;
                         let wrds: Vec<&AsciiStr> = i.value.split(ascii::AsciiChar::Space).collect();
-                        if *restricted && wrds.len() < 3 {
+                        if *restricted && wrds.len() < 2 {
+                            //println!("break 1: len is {}", wrds.len());
                             handler::unauthorized(rq);
                             continue 'outer;
                             //bad request
                         }
-                        if *restricted && wrds[1] != "Basic" {
+                        if *restricted && wrds[0] != "Basic" {
                             handler::unauthorized(rq);
+                            //println!("break 2");
                             continue 'outer;
                             //bad request
                         }
-                        auth = Some(wrds[2]);
+                        //println!("{}", wrds[1]);
+                        auth = Some(wrds[1]);
                     }
                 }
                 //println!("{:?}", auth);
 
                 if *restricted {
+                    //println!("{}",restricted);
                     match auth {
                         None => {
                             handler::unauthorized(rq);
@@ -129,6 +135,7 @@ fn main() {
                             continue 'outer;
                         }
                         Some(authtry) => {
+                        //println!("{} {} {}", authtry, pass, username);
                         if base64::encode(format!("{}:{}", username, pass).as_bytes()) == String::from(authtry.as_str()) {
                             // Dont do anything 
                         } else {
