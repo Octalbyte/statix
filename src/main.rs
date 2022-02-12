@@ -1,7 +1,10 @@
+#![allow(unused_must_use)]
+
 extern crate colored;
 extern crate tiny_http;
 extern crate base64;
 extern crate ascii;
+extern crate ctrlc;
 
 use clap::Parser;
 use istor::istor;
@@ -73,8 +76,6 @@ fn main() {
         restricted = Arc::new(true);
     }
     
-    //println!("{}", &args.blocktor);
-    
     let block_tor = Arc::new(args.blocktor);
 
     let mut crt: Option<SslConfig> = None;
@@ -95,6 +96,7 @@ fn main() {
     let server = Arc::new(server);
 
     let mut guards = Vec::with_capacity(args.threads.parse::<usize>().unwrap());
+ 
 
     for _ in 0..args.threads.parse::<i32>().unwrap() {
 
@@ -109,19 +111,21 @@ fn main() {
                 let rq = server.recv().unwrap();
                 let output = format!("{:?}", &rq);
 
-				let headers = rq.headers();
+		let headers = rq.headers();
                 let mut auth = None;
                 for i in headers.iter() {
                     if i.field == HeaderField::from_bytes("Authorization".as_bytes().to_vec()).unwrap() {
                         let _wrds = &i.value;
                         let wrds: Vec<&AsciiStr> = i.value.split(ascii::AsciiChar::Space).collect();
                         if *restricted && wrds.len() < 2 {
+			    #[allow(unused_must_use)]
                             handler::unauthorized(rq);
                             println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
                             
                         }
                         if *restricted && wrds[0] != "Basic" {
+			    #[allow(unused_must_use)]
                             handler::unauthorized(rq);
                             println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
@@ -140,7 +144,7 @@ fn main() {
                         Some(authtry) => {
                             if base64::encode(format!("{}:{}", username, pass).as_bytes()) == String::from(authtry.as_str()) {
                         } else {
-                            handler::unauthorized(rq);
+			    handler::unauthorized(rq);
                             println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
                         }
@@ -159,7 +163,7 @@ fn main() {
 
                     if istor::istor(str_to_be_checked, false){
                         println!("{} -> {}", output, "Blocked TOR request".red());
-                        rq.respond(
+                       	rq.respond(
                             Response::from_string("You can't use Tor here ¯\\_(ツ)_/¯")
                             .with_status_code(StatusCode(500))
                         );
@@ -208,4 +212,8 @@ fn main() {
             }
         }
     }
+    ctrlc::set_handler(move || {
+	println!("Exiting...");
+	std::process::exit(0);	
+	});
 }
