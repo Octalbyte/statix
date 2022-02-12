@@ -8,4 +8,4 @@ Please create an issue that explains the problem in the app. One liner comments 
 
 # PRs
 
-Be sure not to open a duplicate PR.
+Be sure not to open a duplicate PR. All useful contributions are welcome.
