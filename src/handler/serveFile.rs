@@ -65,7 +65,7 @@ pub fn serveFile(rq: Request, path: &str, cors: &str) -> Result<(), Error> {
     match kind {
         Some(value) => {
             let mut kind = value.mime_type();
-            if isplaintext == true {
+            if isplaintext {
                 kind = "text/plain";
             }
             let rs = rs.unwrap();
@@ -88,12 +88,16 @@ pub fn serveFile(rq: Request, path: &str, cors: &str) -> Result<(), Error> {
             return result;
         }
         None => {
+	    let mut kind = "application/octet-stream";
+            if isplaintext {
+                kind = "text/plain";
+            }
             let rs = rs.unwrap();
             let result = rq.respond(
                 Response::from_file(rs)
                     .with_status_code(StatusCode(200))
                     .with_header(
-                        Header::from_bytes(&b"Content-Type"[..], &b"application/octet-stream"[..])
+                        Header::from_bytes(&b"Content-Type"[..], kind.as_bytes())
                             .unwrap(),
                     ),
             );
