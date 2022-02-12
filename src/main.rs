@@ -20,7 +20,7 @@ mod lib;
 const about: &str = "Simple CLI static file server";
 #[allow(dead_code)]
 #[allow(non_upper_case_globals)]
-const version: &str = "4.6.2";
+const version: &str = "4.8.0";
 #[allow(dead_code)]
 #[allow(non_upper_case_globals)]
 const author: &str = "@Octalbyte";
@@ -71,7 +71,9 @@ fn main() {
         username = Arc::new(args.username);
         restricted = Arc::new(true);
     }
-//    println!("{}", &args.blocktor);
+    
+    //println!("{}", &args.blocktor);
+    
     let block_tor = Arc::new(args.blocktor);
 
     let mut crt: Option<SslConfig> = None;
@@ -109,59 +111,42 @@ fn main() {
 				let headers = rq.headers();
                 let mut auth = None;
                 for i in headers.iter() {
-                    //println!("{}", i);
                     if i.field == HeaderField::from_bytes("Authorization".as_bytes().to_vec()).unwrap() {
-                        //println!("Got the header");
                         let _wrds = &i.value;
                         let wrds: Vec<&AsciiStr> = i.value.split(ascii::AsciiChar::Space).collect();
                         if *restricted && wrds.len() < 2 {
-                            //println!("break 1: len is {}", wrds.len());
                             handler::unauthorized(rq);
                             println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
-                            //bad request
+                            
                         }
                         if *restricted && wrds[0] != "Basic" {
                             handler::unauthorized(rq);
-                            //println!("break 2");
                             println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
-                            //bad request
                         }
-                        //println!("{}", wrds[1]);
                         auth = Some(wrds[1]);
                     }
                 }
-                //println!("{:?}", auth);
 
                 if *restricted {
-                    //println!("{}",restricted);
                     match auth {
                         None => {
                             handler::unauthorized(rq);
                             println!("{} -> {}", output, "401 Unauthorized".red());
-                            //401 unauthorized
                             continue 'outer;
                         }
                         Some(authtry) => {
-                        //println!("{} {} {}", authtry, pass, username);
-                        if base64::encode(format!("{}:{}", username, pass).as_bytes()) == String::from(authtry.as_str()) {
-                            // Dont do anything, let request proceed
+                            if base64::encode(format!("{}:{}", username, pass).as_bytes()) == String::from(authtry.as_str()) {
                         } else {
                             handler::unauthorized(rq);
                             println!("{} -> {}", output, "401 Unauthorized".red());
-                            //401 Unauthorized
                             continue 'outer;
                         }
 
                         }
                     }
                 }
-                //println!("{:?}", &rq);
-
-                //let output = format!("{:?}", &rq);
-               // println!("{}",format!("{}", &rq.remote_addr()).as_str());
-               // println!("{:?}", &blocktor);
 
                 if *blocktor {
                     let str_to_be_checked = format!("{}", &rq.remote_addr());
@@ -171,7 +156,6 @@ fn main() {
                     let str_to_be_checked = String::from(str_to_be_checked[0]);
                     let str_to_be_checked = str_to_be_checked.as_str();
 
-                    //println!("{}", &str_to_be_checked);
                     if istor::istor(str_to_be_checked, false){
                         println!("{} -> {}", output, "Blocked TOR request".red());
                         rq.respond(
@@ -190,7 +174,7 @@ fn main() {
                 if path.contains("../") || path.contains("\\") || path.contains(":") {
                     let _i = handler::badRequest(rq);
                     println!("{} -> {}", output, "500 Bad Request".red());
-                    continue; //bad request
+                    continue; 
                 }
 
                 if Path::new(&("./".to_owned() + &path)).is_dir() {
