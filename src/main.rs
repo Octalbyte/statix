@@ -60,6 +60,7 @@ struct Args {
 }
 
 fn main() {
+    println!("Statix v{} made by {}", &version.bold(), &author.bold());
     let args = Args::parse();
     println!("Binding to {}:{}", args.host, args.port);
     let to_bind = format!("{}:{}", args.host, args.port);

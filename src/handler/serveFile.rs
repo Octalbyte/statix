@@ -11,6 +11,9 @@ use std::io::ErrorKind;
 use tiny_http::{Header, Request, Response, StatusCode};
 
 #[allow(non_snake_case)]
+mod isBin;
+
+#[allow(non_snake_case)]
 pub fn serveFile(rq: Request, path: &str, cors: &str) -> Result<(), Error> {
     //println!("{}", cors);
 
@@ -57,10 +60,14 @@ pub fn serveFile(rq: Request, path: &str, cors: &str) -> Result<(), Error> {
         }
     }
 
+    let isplaintext = !isBin::isBin("./".to_owned() + &path);
     let kind = infer::get_from_path("./".to_owned() + &path).unwrap();
     match kind {
         Some(value) => {
-            let kind = value.mime_type();
+            let mut kind = value.mime_type();
+            if isplaintext == true {
+                kind = "text/plain";
+            }
             let rs = rs.unwrap();
             let length = fs::metadata(&path).unwrap().len();
             let result = rq.respond(
