@@ -118,15 +118,13 @@ fn main() {
                         let _wrds = &i.value;
                         let wrds: Vec<&AsciiStr> = i.value.split(ascii::AsciiChar::Space).collect();
                         if *restricted && wrds.len() < 2 {
-			    #[allow(unused_must_use)]
                             handler::unauthorized(rq);
                             println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
                             
                         }
                         if *restricted && wrds[0] != "Basic" {
-			    #[allow(unused_must_use)]
-                            handler::unauthorized(rq);
+			    handler::unauthorized(rq);
                             println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
                         }
