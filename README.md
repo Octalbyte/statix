@@ -19,4 +19,6 @@ statix #On the folder you want to host
 - `--threads<i32>` set number of threads to be spawned
 - `--cors <String>` set the value of header `Access-Control-Allow-Origin`
 - `--blocktor` Block requests made through TOR
+- `--username <String>` Username for authentication (If None, there will be no authentication required)
+- `--pwd <String>` Password for authentication. 
 - `--help` display more help
