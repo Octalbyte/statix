@@ -11,5 +11,6 @@ pub fn unauthorized(rq: Request) -> Result<(), Error> {
             .with_status_code(StatusCode(401))
             .with_header(Header::from_bytes(&b"WWW-Authenticate"[..], &b"Basic realm=\"Access website\""[..]).unwrap()),
     );
+    
     return result;
 }

@@ -104,7 +104,8 @@ fn main() {
         let guard = thread::spawn( move || {
             'outer: loop {
                 let rq = server.recv().unwrap();
-                			
+                let output = format!("{:?}", &rq);
+
 				let headers = rq.headers();
                 let mut auth = None;
                 for i in headers.iter() {
@@ -116,12 +117,14 @@ fn main() {
                         if *restricted && wrds.len() < 2 {
                             //println!("break 1: len is {}", wrds.len());
                             handler::unauthorized(rq);
+                            println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
                             //bad request
                         }
                         if *restricted && wrds[0] != "Basic" {
                             handler::unauthorized(rq);
                             //println!("break 2");
+                            println!("{} -> {}", output, "401 Unauthorized".red());
                             continue 'outer;
                             //bad request
                         }
@@ -136,15 +139,17 @@ fn main() {
                     match auth {
                         None => {
                             handler::unauthorized(rq);
+                            println!("{} -> {}", output, "401 Unauthorized".red());
                             //401 unauthorized
                             continue 'outer;
                         }
                         Some(authtry) => {
                         //println!("{} {} {}", authtry, pass, username);
                         if base64::encode(format!("{}:{}", username, pass).as_bytes()) == String::from(authtry.as_str()) {
-                            // Dont do anything 
+                            // Dont do anything, let request proceed
                         } else {
                             handler::unauthorized(rq);
+                            println!("{} -> {}", output, "401 Unauthorized".red());
                             //401 Unauthorized
                             continue 'outer;
                         }
@@ -154,7 +159,7 @@ fn main() {
                 }
                 //println!("{:?}", &rq);
 
-                let output = format!("{:?}", &rq);
+                //let output = format!("{:?}", &rq);
                // println!("{}",format!("{}", &rq.remote_addr()).as_str());
                // println!("{:?}", &blocktor);
 
