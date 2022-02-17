@@ -23,7 +23,7 @@ mod lib;
 const about: &str = "Simple CLI static file server";
 #[allow(dead_code)]
 #[allow(non_upper_case_globals)]
-const version: &str = "4.8.0";
+const version: &str = "4.8.1";
 #[allow(dead_code)]
 #[allow(non_upper_case_globals)]
 const author: &str = "@Octalbyte";
