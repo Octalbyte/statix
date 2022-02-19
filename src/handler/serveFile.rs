@@ -62,6 +62,7 @@ pub fn serveFile(rq: Request, path: &str, cors: &str) -> Result<(), Error> {
 
     let isplaintext = !isBin::isBin("./".to_owned() + &path);
     let kind = infer::get_from_path("./".to_owned() + &path).unwrap();
+
     match kind {
         Some(value) => {
             let mut kind = value.mime_type();
