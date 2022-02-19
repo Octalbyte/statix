@@ -11,7 +11,7 @@ pub mod crt {
         let mut reader = BufReader::new(f);
         let mut buffer = Vec::new();
         reader.read_to_end(&mut buffer).expect("Failed to tread to buffer");
-        return buffer;
+        buffer
     }
     pub fn private(_filename: String) -> Vec<u8> {
         
@@ -24,6 +24,6 @@ pub mod crt {
         let mut reader = BufReader::new(f);
         let mut buffer = Vec::new();
         reader.read_to_end(&mut buffer).expect("Failed to tread to buffer");
-        return buffer;
+        buffer
     }
 }
