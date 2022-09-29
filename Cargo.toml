@@ -15,7 +15,7 @@ categories = ["web-programming::http-server"]
 colored = "2"
 tiny_http = "0.11"
 infer = "0.7.0"
-clap = { version = "3.0.0-rc.8", features = ["derive"] }
+clap = { version = "4.0.2", features = ["derive"] }
 istor = "0.2.1"
 base64 = "0.13.0"
 ascii = "1.0.0"
